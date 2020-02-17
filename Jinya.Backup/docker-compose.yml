@@ -1,0 +1,19 @@
+version: "3"
+services:
+  jinya-backup-db:
+    container_name: jinya-backup-db
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - 1433:1433
+    environment:
+      SA_PASSWORD: okjnsfdshioaergioaderfggnioaernoajfv
+      ACCEPT_EULA: Y
+    restart: always
+
+  jinya-backup-mailhog:
+    container_name: jinya-backup-mailhog
+    image: mailhog/mailhog
+    ports:
+      - 1425:1025
+      - 8425:8025
+    restart: always
