@@ -39,3 +39,47 @@
 <div>
     <button on:click={save}>Save</button>
 </div>
+
+<style>
+    div {
+        margin-bottom: 1rem;
+    }
+
+    input {
+        padding: 0.5rem;
+        width: 20rem;
+        background: #fff;
+        border: 1px solid #afafaf;
+        border-radius: 4px;
+    }
+
+    button {
+        border-radius: 5px;
+        padding: 0.25rem 0.5rem;
+        background: #eee;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s;
+        line-height: normal;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #fff;
+    }
+
+    fieldset {
+        border: none;
+        margin: 0;
+        padding: 1rem 0 0;
+    }
+
+    legend {
+        font-size: 1.25rem;
+    }
+
+    label {
+        font-weight: bold;
+    }
+</style>

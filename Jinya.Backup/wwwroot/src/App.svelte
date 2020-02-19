@@ -32,4 +32,26 @@
     router.start();
 </script>
 
-<svelte:component this={page} params={params}/>
+<main>
+    <h1>Jinya Backup</h1>
+    <svelte:component this={page} params={params}/>
+</main>
+
+<style>
+    :root {
+        color: #333;
+    }
+
+    h1 {
+        margin-top: 0;
+    }
+
+    main {
+        margin-right: 20%;
+        margin-left: 20%;
+        padding: 1rem;
+        background: #fafafa;
+        border-radius: 5px;
+        margin-top: 2rem;
+    }
+</style>

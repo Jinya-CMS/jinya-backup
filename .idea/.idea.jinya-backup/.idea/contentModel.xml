@@ -114,6 +114,7 @@
               <e p="bundle.js.map" t="Include" />
             </e>
             <e p="favicon.png" t="Include" />
+            <e p="normalize.css" t="Include" />
           </e>
           <e p="rollup.config.js" t="Include" />
           <e p="src" t="Include">

@@ -29,14 +29,14 @@
 </script>
 
 <div>
-    <a href="/job/new">New Job</a>
+    <a class="button" href="/job/new">New Job</a>
 </div>
 {#await loadPromise}
     <progress></progress>
-    <p>Loading jobs...</p>
+    <p class="info">Loading jobs...</p>
 {:then jobs}
     {#if jobs.length === 0}
-        <div>No Jobs found</div>
+        <p class="info">No Jobs found</p>
     {:else}
         <table>
             <thead>
@@ -52,9 +52,9 @@
                     <td>{job.id}</td>
                     <td>{job.name}</td>
                     <td>
-                        <a href="/job/{job.id}">Edit</a>
-                        <a href="/job/{job.id}/steps">Steps</a>
-                        <button on:click={() => enqueue(job.id)}>Enqueue</button>
+                        <a class="button" href="/job/{job.id}">Edit</a>
+                        <a class="button" href="/job/{job.id}/steps">Steps</a>
+                        <button class="button" on:click={() => enqueue(job.id)}>Enqueue</button>
                     </td>
                 </tr>
             {/each}
@@ -62,5 +62,64 @@
         </table>
     {/if}
 {:catch error}
-    <p>{error.message}</p>
+    <p class="error">{error.message}</p>
 {/await}
+
+<style>
+    table {
+        width: 100%;
+        border-spacing: 0;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    th {
+        text-align: left;
+        border-bottom: 2px solid #333;
+        padding: 0.5rem;
+    }
+
+    td {
+        border-bottom: 1px solid #333;
+        padding: 0.5rem;
+    }
+
+    tbody tr:nth-child(2n - 1) {
+        background: #f3f3f3;
+    }
+
+    progress {
+        margin: 1rem 0;
+        width: 100%;
+    }
+
+    .error {
+        padding: 0.5rem;
+        background: #c4363c;
+        border-radius: 5px;
+        color: #eee;
+    }
+
+    .info {
+        padding: 0.5rem;
+        background: #61b4c4;
+        border-radius: 5px;
+        color: #eee;
+    }
+
+    .button {
+        border-radius: 5px;
+        padding: 0.25rem 0.5rem;
+        background: #eee;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s;
+        line-height: normal;
+        cursor: pointer;
+    }
+    
+    .button:hover {
+        background: #fff;
+    }
+</style>

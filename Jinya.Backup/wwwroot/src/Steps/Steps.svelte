@@ -28,7 +28,7 @@
             }
         }
     }
-    
+
     async function savePosition(step) {
         const response = await fetch(`/api/job/${params.jobId}/step/${step.id}/move/${step.position}`, {
             method: 'PUT',
@@ -43,21 +43,22 @@
 
 {#await loadPromise}
     <progress></progress>
-    <p>Loading job and steps...</p>
+    <p class="info">Loading job and steps...</p>
 {:then data}
-    <h1>{data.job.name} – Steps</h1>
+    <h2>{data.job.name} – Steps</h2>
     <div>
-        <a href="/job/{params.jobId}/steps/add/0">Add step</a>
+        <a class="button" href="/job/{params.jobId}/steps/add/0">Add step</a>
     </div>
 {:catch error}
-    <p>{error.message}</p>
+    <p class="error">{error.message}</p>
 {/await}
 {#each steps as step, i}
     <hr>
     <dl>
         <dt><label for="position">Position</label></dt>
         <dd>
-            <input type="number" id="position" bind:value={step.position}><button on:click={() => savePosition(step)}>Move Step</button>
+            <input type="number" id="position" bind:value={step.position}>
+            <button class="button" on:click={() => savePosition(step)}>Move Step</button>
         </dd>
         <dt>Type</dt>
         <dd>
@@ -97,9 +98,87 @@
         {/if}
     </dl>
     <div>
-        <a href="/job/{params.jobId}/steps/{step.id}/edit">Edit</a>
-        <button on:click={() => deleteStep(step.id)}>Delete step</button>
+        <a class="button" href="/job/{params.jobId}/steps/{step.id}/edit">Edit</a>
+        <button class="button" on:click={() => deleteStep(step.id)}>Delete step</button>
     </div>
     <hr>
-    <a href="/job/{params.jobId}/steps/add/{i + 1}">Add step</a>
+    <a class="button" href="/job/{params.jobId}/steps/add/{i + 1}">Add step</a>
 {/each}
+
+<style>
+    div {
+        margin-bottom: 1rem;
+    }
+
+    input {
+        padding: 0.5rem;
+        width: 20rem;
+        background: #fff;
+        border: 1px solid #afafaf;
+        border-radius: 4px;
+    }
+
+    .button {
+        border-radius: 5px;
+        padding: 0.25rem 0.5rem;
+        background: #eee;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s;
+        line-height: normal;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background: #fff;
+    }
+
+    fieldset {
+        border: none;
+        margin: 0;
+        padding: 1rem 0 0;
+    }
+
+    legend {
+        font-size: 1.25rem;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    dd {
+        margin-left: 0;
+        padding-left: 0;
+        margin-bottom: 1rem;
+    }
+
+    dt {
+        font-weight: bold;
+    }
+
+    hr {
+        border-bottom: unset;
+        border-top: 1px solid #333;
+    }
+
+    progress {
+        margin: 1rem 0;
+        width: 100%;
+    }
+
+    .error {
+        padding: 0.5rem;
+        background: #c4363c;
+        border-radius: 5px;
+        color: #eee;
+    }
+
+    .info {
+        padding: 0.5rem;
+        background: #61b4c4;
+        border-radius: 5px;
+        color: #eee;
+    }
+</style>
