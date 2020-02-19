@@ -142,7 +142,7 @@ namespace Jinya.Backup.Controllers.Api
                         var dirPath = Path.Combine(step.Target);
                         if (!Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
 
-                        var filePath = Path.Combine(dirPath, DateTime.Now.ToString("s") + ".tar.gz");
+                        var filePath = Path.Combine(dirPath, DateTime.Now.ToString("s"), Path.GetFileName(step.Source));
                         await using var fileStream = new FileStream(
                             filePath,
                             FileMode.CreateNew

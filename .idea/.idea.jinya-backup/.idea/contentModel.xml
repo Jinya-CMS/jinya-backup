@@ -41,8 +41,6 @@
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="docker-compose.yml" t="Include" />
-        <e p="mono_crash.mem.14369.1.blob" t="Include" />
-        <e p="mono_crash.mem.16007.1.blob" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
@@ -55,30 +53,58 @@
           <e p=".gitignore" t="Include" />
           <e p="README.md" t="Include" />
           <e p="favicon.ico" t="Include" />
-          <e p="node_modules/@rollup/plugin-commonjs" t="IncludeRecursive" />
-          <e p="node_modules/@rollup/plugin-node-resolve" t="IncludeRecursive" />
-          <e p="node_modules/@rollup/pluginutils" t="IncludeRecursive" />
-          <e p="node_modules/@types" t="IncludeRecursive">
-            <e p="node" t="IncludeRecursive" />
+          <e p="node_modules" t="Include">
+            <e p="@rollup/plugin-commonjs" t="IncludeRecursive" />
+            <e p="@rollup/plugin-node-resolve" t="IncludeRecursive" />
+            <e p="@rollup/pluginutils" t="IncludeRecursive" />
+            <e p="@types" t="IncludeRecursive">
+              <e p="node" t="IncludeRecursive" />
+            </e>
+            <e p="chokidar" t="IncludeRecursive" />
+            <e p="commander" t="IncludeRecursive" />
+            <e p="estree-walker" t="IncludeRecursive" />
+            <e p="is-reference" t="IncludeRecursive" />
+            <e p="jest-worker" t="IncludeRecursive" />
+            <e p="kleur" t="IncludeRecursive" />
+            <e p="magic-string" t="IncludeRecursive" />
+            <e p="page" t="IncludeRecursive">
+              <e p="History.md" t="Include" />
+              <e p="Readme.md" t="Include" />
+              <e p="index.js" t="Include" />
+              <e p="package.json" t="Include" />
+              <e p="page.js" t="Include" />
+              <e p="page.mjs" t="Include" />
+            </e>
+            <e p="path-to-regexp" t="Include">
+              <e p="History.md" t="Include" />
+              <e p="LICENSE" t="Include" />
+              <e p="Readme.md" t="Include" />
+              <e p="index.js" t="Include" />
+              <e p="node_modules" t="Include">
+                <e p="isarray" t="Include">
+                  <e p="README.md" t="Include" />
+                  <e p="build" t="Include">
+                    <e p="build.js" t="Include" />
+                  </e>
+                  <e p="component.json" t="Include" />
+                  <e p="index.js" t="Include" />
+                  <e p="package.json" t="Include" />
+                </e>
+              </e>
+              <e p="package.json" t="Include" />
+            </e>
+            <e p="rollup" t="IncludeRecursive" />
+            <e p="rollup-plugin-livereload" t="IncludeRecursive" />
+            <e p="rollup-plugin-svelte" t="IncludeRecursive" />
+            <e p="rollup-plugin-terser" t="IncludeRecursive" />
+            <e p="rollup-pluginutils" t="IncludeRecursive" />
+            <e p="sirv-cli" t="IncludeRecursive" />
+            <e p="source-map" t="IncludeRecursive" />
+            <e p="sourcemap-codec" t="IncludeRecursive" />
+            <e p="svelte" t="IncludeRecursive" />
+            <e p="terser" t="IncludeRecursive" />
+            <e p="upath" t="IncludeRecursive" />
           </e>
-          <e p="node_modules/chokidar" t="IncludeRecursive" />
-          <e p="node_modules/commander" t="IncludeRecursive" />
-          <e p="node_modules/estree-walker" t="IncludeRecursive" />
-          <e p="node_modules/is-reference" t="IncludeRecursive" />
-          <e p="node_modules/jest-worker" t="IncludeRecursive" />
-          <e p="node_modules/kleur" t="IncludeRecursive" />
-          <e p="node_modules/magic-string" t="IncludeRecursive" />
-          <e p="node_modules/rollup" t="IncludeRecursive" />
-          <e p="node_modules/rollup-plugin-livereload" t="IncludeRecursive" />
-          <e p="node_modules/rollup-plugin-svelte" t="IncludeRecursive" />
-          <e p="node_modules/rollup-plugin-terser" t="IncludeRecursive" />
-          <e p="node_modules/rollup-pluginutils" t="IncludeRecursive" />
-          <e p="node_modules/sirv-cli" t="IncludeRecursive" />
-          <e p="node_modules/source-map" t="IncludeRecursive" />
-          <e p="node_modules/sourcemap-codec" t="IncludeRecursive" />
-          <e p="node_modules/svelte" t="IncludeRecursive" />
-          <e p="node_modules/terser" t="IncludeRecursive" />
-          <e p="node_modules/upath" t="IncludeRecursive" />
           <e p="package.json" t="Include" />
           <e p="public" t="Include">
             <e p="build" t="Include">
@@ -88,12 +114,20 @@
               <e p="bundle.js.map" t="Include" />
             </e>
             <e p="favicon.png" t="Include" />
-            <e p="global.css" t="Include" />
-            <e p="index.html" t="Include" />
           </e>
           <e p="rollup.config.js" t="Include" />
           <e p="src" t="Include">
             <e p="App.svelte" t="Include" />
+            <e p="Jobs" t="Include">
+              <e p="AddJob.svelte" t="Include" />
+              <e p="EditJob.svelte" t="Include" />
+              <e p="JobList.svelte" t="Include" />
+            </e>
+            <e p="Steps" t="Include">
+              <e p="AddStep.svelte" t="Include" />
+              <e p="EditStep.svelte" t="Include" />
+              <e p="Steps.svelte" t="Include" />
+            </e>
             <e p="main.js" t="Include" />
           </e>
           <e p="yarn.lock" t="Include" />
