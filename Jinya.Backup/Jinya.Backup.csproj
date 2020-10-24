@@ -5,7 +5,7 @@
         <UserSecretsId>aspnet-Jinya.Backup-3E2DE8A9-5D39-4E79-BA02-D8CE453A541D</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.7.9" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.7.17" />
         <PackageReference Include="Hangfire.Core" Version="1.7.9" />
         <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
         <PackageReference Include="Hangfire.SqlServer" Version="1.7.9" />
