@@ -29,7 +29,8 @@ spec:
                 sh "apt-get install -y openjdk-11-jre-headless libzip-dev git wget unzip zip"
                 sh 'java -version'
                 sh 'dotnet tool install --global dotnet-sonarscanner --version 5.0.4'
-                sh 'dotnet sonarscanner /k:"jinya:backup"'
+                sh 'export PATH="$PATH:/root/.dotnet/tools"'
+                sh 'dotnet sonarscanner begin /k:"jinya:backup"'
                 sh 'dotnet build jinya-backup.sln'
                 sh 'dotnet sonarscanner end'
             }
