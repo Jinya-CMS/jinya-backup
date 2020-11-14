@@ -30,7 +30,7 @@ spec:
                 sh 'java -version'
                 sh 'dotnet tool install --global dotnet-sonarscanner --version 5.0.4'
                 sh 'export PATH="$PATH:/root/.dotnet/tools"'
-                sh 'dotnet sonarscanner begin /k:"jinya:backup"'
+                sh 'dotnet sonarscanner begin /key:"jinya:backup" /name:"Jinya Backup" /d:sonar.host.url=https://sonarqube.imanuel.dev'
                 sh 'dotnet build jinya-backup.sln'
                 sh 'dotnet sonarscanner end'
             }
