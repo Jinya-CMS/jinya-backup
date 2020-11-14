@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
+    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.2/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.2/resharper-host/local/Transient/Rider/v202/SolutionCaches/_jinya-backup.-194762631.00" t="ExcludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_jinya-backup.-194762631.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="Jinya.Backup" t="IncludeRecursive">
         <e p="Auth" t="Include">
+          <e p="AuthenticationFilter.cs" t="Include" />
+          <e p="AuthenticationKeyStorage.cs" t="Include" />
           <e p="JinyaDashboardAuthorization.cs" t="Include" />
         </e>
         <e p="Controllers" t="Include">
@@ -21,6 +25,7 @@
           <e p="Job.cs" t="Include" />
           <e p="Step.cs" t="Include" />
         </e>
+        <e p="Dockerfile" t="Include" />
         <e p="Jinya.Backup.csproj" t="IncludeRecursive" />
         <e p="Migrations" t="Include">
           <e p="20200216212901_InitialCreate.Designer.cs" t="Include" />
@@ -43,7 +48,7 @@
         <e p="docker-compose.yml" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
-            <e p="netcoreapp3.1" t="Include">
+            <e p="netcoreapp5.0" t="Include">
               <e p="Jinya.Backup.AssemblyInfo.cs" t="Include" />
               <e p="Jinya.Backup.RazorAssemblyInfo.cs" t="Include" />
             </e>
@@ -53,58 +58,30 @@
           <e p=".gitignore" t="Include" />
           <e p="README.md" t="Include" />
           <e p="favicon.ico" t="Include" />
-          <e p="node_modules" t="Include">
-            <e p="@rollup/plugin-commonjs" t="IncludeRecursive" />
-            <e p="@rollup/plugin-node-resolve" t="IncludeRecursive" />
-            <e p="@rollup/pluginutils" t="IncludeRecursive" />
-            <e p="@types" t="IncludeRecursive">
-              <e p="node" t="IncludeRecursive" />
-            </e>
-            <e p="chokidar" t="IncludeRecursive" />
-            <e p="commander" t="IncludeRecursive" />
-            <e p="estree-walker" t="IncludeRecursive" />
-            <e p="is-reference" t="IncludeRecursive" />
-            <e p="jest-worker" t="IncludeRecursive" />
-            <e p="kleur" t="IncludeRecursive" />
-            <e p="magic-string" t="IncludeRecursive" />
-            <e p="page" t="IncludeRecursive">
-              <e p="History.md" t="Include" />
-              <e p="Readme.md" t="Include" />
-              <e p="index.js" t="Include" />
-              <e p="package.json" t="Include" />
-              <e p="page.js" t="Include" />
-              <e p="page.mjs" t="Include" />
-            </e>
-            <e p="path-to-regexp" t="Include">
-              <e p="History.md" t="Include" />
-              <e p="LICENSE" t="Include" />
-              <e p="Readme.md" t="Include" />
-              <e p="index.js" t="Include" />
-              <e p="node_modules" t="Include">
-                <e p="isarray" t="Include">
-                  <e p="README.md" t="Include" />
-                  <e p="build" t="Include">
-                    <e p="build.js" t="Include" />
-                  </e>
-                  <e p="component.json" t="Include" />
-                  <e p="index.js" t="Include" />
-                  <e p="package.json" t="Include" />
-                </e>
-              </e>
-              <e p="package.json" t="Include" />
-            </e>
-            <e p="rollup" t="IncludeRecursive" />
-            <e p="rollup-plugin-livereload" t="IncludeRecursive" />
-            <e p="rollup-plugin-svelte" t="IncludeRecursive" />
-            <e p="rollup-plugin-terser" t="IncludeRecursive" />
-            <e p="rollup-pluginutils" t="IncludeRecursive" />
-            <e p="sirv-cli" t="IncludeRecursive" />
-            <e p="source-map" t="IncludeRecursive" />
-            <e p="sourcemap-codec" t="IncludeRecursive" />
-            <e p="svelte" t="IncludeRecursive" />
-            <e p="terser" t="IncludeRecursive" />
-            <e p="upath" t="IncludeRecursive" />
+          <e p="node_modules/@rollup/plugin-commonjs" t="IncludeRecursive" />
+          <e p="node_modules/@rollup/plugin-node-resolve" t="IncludeRecursive" />
+          <e p="node_modules/@rollup/pluginutils" t="IncludeRecursive" />
+          <e p="node_modules/@types" t="IncludeRecursive">
+            <e p="node" t="IncludeRecursive" />
           </e>
+          <e p="node_modules/acorn" t="IncludeRecursive" />
+          <e p="node_modules/builtin-modules" t="IncludeRecursive" />
+          <e p="node_modules/commander" t="IncludeRecursive" />
+          <e p="node_modules/estree-walker" t="IncludeRecursive" />
+          <e p="node_modules/is-reference" t="IncludeRecursive" />
+          <e p="node_modules/jest-worker" t="IncludeRecursive" />
+          <e p="node_modules/kleur" t="IncludeRecursive" />
+          <e p="node_modules/magic-string" t="IncludeRecursive" />
+          <e p="node_modules/page" t="IncludeRecursive" />
+          <e p="node_modules/rollup" t="IncludeRecursive" />
+          <e p="node_modules/rollup-plugin-livereload" t="IncludeRecursive" />
+          <e p="node_modules/rollup-plugin-svelte" t="IncludeRecursive" />
+          <e p="node_modules/rollup-plugin-terser" t="IncludeRecursive" />
+          <e p="node_modules/rollup-pluginutils" t="IncludeRecursive" />
+          <e p="node_modules/sirv-cli" t="IncludeRecursive" />
+          <e p="node_modules/sourcemap-codec" t="IncludeRecursive" />
+          <e p="node_modules/svelte" t="IncludeRecursive" />
+          <e p="node_modules/terser" t="IncludeRecursive" />
           <e p="package.json" t="Include" />
           <e p="public" t="Include">
             <e p="build" t="Include">
@@ -124,11 +101,13 @@
               <e p="EditJob.svelte" t="Include" />
               <e p="JobList.svelte" t="Include" />
             </e>
+            <e p="LoginPage.svelte" t="Include" />
             <e p="Steps" t="Include">
               <e p="AddStep.svelte" t="Include" />
               <e p="EditStep.svelte" t="Include" />
               <e p="Steps.svelte" t="Include" />
             </e>
+            <e p="authenticationStorage.js" t="Include" />
             <e p="main.js" t="Include" />
           </e>
           <e p="yarn.lock" t="Include" />

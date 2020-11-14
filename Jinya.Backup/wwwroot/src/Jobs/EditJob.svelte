@@ -1,13 +1,18 @@
 <script>
     import {onMount} from 'svelte';
     import router from 'page';
+    import {getKey} from "../authenticationStorage";
 
     export let params;
 
     let name;
 
     onMount(async () => {
-        const response = await fetch(`/api/job/${params.id}`);
+        const response = await fetch(`/api/job/${params.id}`, {
+            headers: {
+                AuthKey: getKey(),
+            },
+        });
         if (response.ok) {
             const json = await response.json();
             name = json.name;
@@ -22,6 +27,7 @@
             body: JSON.stringify({name}),
             headers: {
                 'Content-Type': 'application/json',
+                AuthKey: getKey(),
             },
         });
         if (response.ok) {
@@ -63,6 +69,7 @@
         transition: all 0.3s;
         line-height: normal;
         cursor: pointer;
+        box-sizing: border-box;
     }
 
     button:hover {

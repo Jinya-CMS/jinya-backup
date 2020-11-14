@@ -1,10 +1,10 @@
+using System;
 using Hangfire;
 using Jinya.Backup.Auth;
 using Jinya.Backup.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,17 +24,22 @@ namespace Jinya.Backup
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Environment.GetEnvironmentVariable("JINYA_DB_CONNECTION");
+            if (connectionString == null)
+            {
+                throw new ApplicationException();
+            }
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(connectionString));
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection"))
+                .UseSqlServerStorage(connectionString)
             );
             services.AddHangfireServer();
             services.AddControllers();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options => options.Filters.Add(typeof(AuthenticationFilter)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,18 +56,21 @@ namespace Jinya.Backup
             }
 
             app.UseStaticFiles();
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            {
-                Authorization = new[] {new JinyaDashboardAuthorization()}
-            });
-
             app.UseRouting();
-
+            if (env.IsDevelopment())
+            {
+                app.UseHangfireDashboard("/hangfire", new DashboardOptions
+                {
+                    Authorization = new[] {new JinyaDashboardAuthorization()}
+                });
+            }
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute("CatchAll", "{*url}", new {controller = "Home", action = "Index"});
             });
+            AuthenticationKeyStorage.Run();
         }
     }
 }

@@ -139,10 +139,10 @@ namespace Jinya.Backup.Controllers.Api
                         sftpClient.Connect();
 
                         await using var backupFileStream = sftpClient.OpenRead(step.Source);
-                        var dirPath = Path.Combine(step.Target);
+                        var dirPath = Path.Combine(step.Target, DateTime.Now.ToString("s"));
                         if (!Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
 
-                        var filePath = Path.Combine(dirPath, DateTime.Now.ToString("s"), Path.GetFileName(step.Source));
+                        var filePath = Path.Combine(dirPath, Path.GetFileName(step.Source));
                         await using var fileStream = new FileStream(
                             filePath,
                             FileMode.CreateNew

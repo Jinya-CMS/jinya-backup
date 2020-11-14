@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>netcoreapp5.0</TargetFramework>
         <UserSecretsId>aspnet-Jinya.Backup-3E2DE8A9-5D39-4E79-BA02-D8CE453A541D</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>

@@ -1,4 +1,6 @@
 <script>
+    import {getKey} from "../authenticationStorage";
+
     export let params;
 
     let steps = [];
@@ -6,10 +8,18 @@
     let loadPromise = load();
 
     async function load() {
-        const stepsResponse = await fetch(`/api/job/${params.jobId}/step`);
+        const stepsResponse = await fetch(`/api/job/${params.jobId}/step`, {
+            headers: {
+                AuthKey: getKey(),
+            },
+        });
         steps = await stepsResponse.json();
 
-        const jobResponse = await fetch(`/api/job/${params.jobId}`);
+        const jobResponse = await fetch(`/api/job/${params.jobId}`, {
+            headers: {
+                AuthKey: getKey(),
+            },
+        });
         job = await jobResponse.json();
 
         return {job, steps};
@@ -20,6 +30,9 @@
         if (confirmDelete) {
             const response = await fetch(`/api/job/${params.jobId}/step/${stepId}`, {
                 method: 'DELETE',
+                headers: {
+                    AuthKey: getKey(),
+                },
             });
             if (response.ok) {
                 loadPromise = load();
@@ -32,6 +45,9 @@
     async function savePosition(step) {
         const response = await fetch(`/api/job/${params.jobId}/step/${step.id}/move/${step.position}`, {
             method: 'PUT',
+            headers: {
+                AuthKey: getKey(),
+            },
         });
         if (response.ok) {
             loadPromise = load();
@@ -128,6 +144,7 @@
         transition: all 0.3s;
         line-height: normal;
         cursor: pointer;
+        box-sizing: border-box;
     }
 
     .button:hover {

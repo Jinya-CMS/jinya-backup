@@ -6,7 +6,7 @@ services:
     ports:
       - 1433:1433
     environment:
-      SA_PASSWORD: okjnsfdshioaergioaderfggnioaernoajfv
+      SA_PASSWORD: okjnsfdshioaergioaderfggnioaAasder12noajfv
       ACCEPT_EULA: Y
     restart: always
 

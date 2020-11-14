@@ -1,11 +1,15 @@
 <script>
-    import {onMount} from 'svelte';
+    import {getKey} from "../authenticationStorage";
 
     let jobs = [];
     let loadPromise = load();
 
     async function load() {
-        const response = await fetch('/api/job');
+        const response = await fetch('/api/job', {
+            headers: {
+                AuthKey: getKey(),
+            },
+        });
         if (response.ok) {
             return await response.json();
         } else {
@@ -18,6 +22,9 @@
         if (cron) {
             const response = await fetch(`/api/job/${jobId}/enqueue?cron=${cron}`, {
                 method: 'POST',
+                headers: {
+                    AuthKey: getKey(),
+                },
             });
             if (response.ok) {
                 alert('Enqueued successfully');
@@ -117,8 +124,9 @@
         transition: all 0.3s;
         line-height: normal;
         cursor: pointer;
+        box-sizing: border-box;
     }
-    
+
     .button:hover {
         background: #fff;
     }

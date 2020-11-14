@@ -1,36 +1,23 @@
 <script>
+    import {saveKey} from "./authenticationStorage";
     import router from 'page';
-    import {getKey} from "../authenticationStorage";
 
-    export let params;
+    let authKey;
 
-    let name;
-
-    async function save() {
-        const response = await fetch(`/api/job`, {
-            method: 'POST',
-            body: JSON.stringify({name}),
-            headers: {
-                'Content-Type': 'application/json',
-                AuthKey: getKey(),
-            },
-        });
-        if (response.ok) {
-            router('/');
-        } else {
-            alert('Error saving job');
-        }
+    function login() {
+        saveKey(authKey);
+        router('/');
     }
 </script>
 
 <fieldset>
-    <legend>Add Job</legend>
+    <legend>Login</legend>
     <div>
-        <label for="name">Name</label><br/>
-        <input type="text" bind:value={name} id="name">
+        <label for="password">Authentication Key</label><br/>
+        <input type="password" id="password" bind:value={authKey}>
     </div>
     <div>
-        <button on:click={save}>Save</button>
+        <button on:click={login}>Login</button>
     </div>
 </fieldset>
 
@@ -57,7 +44,6 @@
         transition: all 0.3s;
         line-height: normal;
         cursor: pointer;
-        box-sizing: border-box;
     }
 
     button:hover {

@@ -1,5 +1,6 @@
 <script>
     import router from 'page';
+    import {getKey} from "../authenticationStorage";
 
     export let params;
 
@@ -7,7 +8,11 @@
     let loadPromise = loadStep();
 
     async function loadStep() {
-        const response = await fetch(`/api/job/${params.jobId}/step/${params.stepId}`);
+        const response = await fetch(`/api/job/${params.jobId}/step/${params.stepId}`, {
+            headers: {
+                AuthKey: getKey(),
+            },
+        });
         step = await response.json();
 
         return step;
@@ -20,6 +25,7 @@
             body: JSON.stringify(step),
             headers: {
                 'Content-Type': 'application/json',
+                AuthKey: getKey(),
             },
         });
         if (response.ok) {
@@ -107,6 +113,7 @@
         transition: all 0.3s;
         line-height: normal;
         cursor: pointer;
+        box-sizing: border-box;
     }
 
     button:hover {
