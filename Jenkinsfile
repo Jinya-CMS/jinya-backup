@@ -26,7 +26,7 @@ spec:
                 sh "mkdir -p /usr/share/man/man1"
                 sh "apt-get update"
                 sh "apt-get install -y apt-utils"
-                sh "apt-get install -y openjdk-11-jre-headless libzip-dev git wget unzip zip"
+                sh "apt-get install -y openjdk-11-jre-headless libzip-dev git wget unzip zip nodejs"
                 sh 'java -version'
                 sh 'dotnet tool install dotnet-sonarscanner --tool-path /bin'
                 sh 'export PATH="$PATH:/root/.dotnet/tools"'
