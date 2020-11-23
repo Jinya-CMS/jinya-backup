@@ -8,7 +8,7 @@
         <PackageReference Include="Hangfire.AspNetCore" Version="1.7.9" />
         <PackageReference Include="Hangfire.Core" Version="1.7.9" />
         <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
-        <PackageReference Include="Hangfire.SqlServer" Version="1.7.9" />
+        <PackageReference Include="Hangfire.SqlServer" Version="1.7.18" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1" />
