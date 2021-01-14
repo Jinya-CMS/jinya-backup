@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:jinya_backup/database/models/user.dart';
 import 'package:postgres/postgres.dart';
 
-import '../src/database/models/user.dart';
-
-void writeDotEnv(String host, String port, String user, String password,
+void _writeDotEnv(String host, String port, String user, String password,
     String database) async {
   final dotEnvFile = File(Directory.current.absolute.path + '/.env');
   final envVars = [
@@ -107,6 +106,6 @@ void main(List<String> args) async {
         });
 
     stdout.writeln('Write dotenv variable');
-    await writeDotEnv(host, port, user, password, database);
+    await _writeDotEnv(host, port, user, password, database);
   }
 }

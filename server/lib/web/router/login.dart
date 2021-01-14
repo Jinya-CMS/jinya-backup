@@ -1,0 +1,27 @@
+import 'dart:convert';
+
+import 'package:jinya_backup/database/exceptions/invalid_credentials_exception.dart';
+import 'package:jinya_backup/database/models/user.dart';
+import 'package:shelf/shelf.dart';
+import 'package:shelf_router/shelf_router.dart';
+
+class LoginRouter {
+  Router get router {
+    final app = Router();
+
+    app.post('/', (Request request) async {
+      final body = jsonDecode(await request.readAsString());
+      try {
+        final result = await User.login(body['username'], body['password']);
+
+        return Response.ok(jsonEncode(result));
+      } catch (e) {
+        if (e is InvalidCredentialsException) {
+          return Response.forbidden('Invalid credentials');
+        }
+      }
+    });
+
+    return app;
+  }
+}

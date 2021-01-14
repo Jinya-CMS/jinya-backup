@@ -1,17 +1,20 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:shelf/shelf.dart' as shelf;
+import 'package:dotenv/dotenv.dart' as dotenv;
+import 'package:jinya_backup/web/router/login.dart';
+import 'package:jinya_backup/web/router/user.dart';
 import 'package:shelf/shelf_io.dart' as io;
+import 'package:shelf_router/shelf_router.dart';
 
 final _hostname = InternetAddress.anyIPv4;
 
 void main(List<String> args) async {
-  var parser = ArgParser()..addOption('port', abbr: 'p');
-  var result = parser.parse(args);
+  final parser = ArgParser()..addOption('port', abbr: 'p');
+  final result = parser.parse(args);
 
-  var portStr = result['port'] ?? Platform.environment['PORT'] ?? '8080';
-  var port = int.tryParse(portStr);
+  final portStr = result['port'] ?? Platform.environment['PORT'] ?? '8080';
+  final port = int.tryParse(portStr);
 
   if (port == null) {
     stdout.writeln('Could not parse port value "$portStr" into a number.');
@@ -20,13 +23,12 @@ void main(List<String> args) async {
     return;
   }
 
-  var handler = const shelf.Pipeline()
-      .addMiddleware(shelf.logRequests())
-      .addHandler(_echoRequest);
+  dotenv.load();
 
-  var server = await io.serve(handler, _hostname, port);
+  final app = Router();
+  app.mount('/api/user/', UserRouter().router);
+  app.mount('/api/login/', LoginRouter().router);
+
+  final server = await io.serve(app, _hostname, port);
   print('Serving at http://${server.address.host}:${server.port}');
 }
-
-shelf.Response _echoRequest(shelf.Request request) =>
-    shelf.Response.ok('Request for "${request.url}"');
