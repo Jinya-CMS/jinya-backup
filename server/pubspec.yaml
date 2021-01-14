@@ -1,4 +1,4 @@
-name: jinya-backup
+name: jinya_backup
 description: The server component for Jinya Backup
 # version: 1.0.0
 # homepage: https://www.example.com
@@ -7,8 +7,11 @@ environment:
   sdk: '>=2.10.0 <3.0.0'
 
 dependencies:
-  args: ^1.6.0
-  shelf: ^0.7.5
+  args: 1.6.0
+  shelf: 0.7.9
+  postgres: 2.2.0
+  crypto: 2.1.5
+  dotenv: 2.0.0
 
 dev_dependencies:
   pedantic: ^1.9.0

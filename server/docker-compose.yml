@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  jinya-backup-db:
+    container_name: jinya-backup-db
+    image: postgres:13.0-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: jinya
+      POSTGRES_PASSWORD: jinya
+    restart: always
