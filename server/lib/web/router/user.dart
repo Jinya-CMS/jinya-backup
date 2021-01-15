@@ -11,15 +11,15 @@ class UserRouter {
     app.get(
         '/',
         (Request request) => authenticated(request,
-            (_) async => Response.ok(jsonEncode(await User.findAll()))));
+            (_, __) async => Response.ok(jsonEncode(await User.findAll()))));
     app.get(
         '/<id>',
         (Request request, String id) => authenticated(request,
-            (_) async => Response.ok(jsonEncode(await User.findById(id)))));
+            (_, __) async => Response.ok(jsonEncode(await User.findById(id)))));
 
     app.post(
         '/',
-        (Request request) => authenticated(request, (_) async {
+        (Request request) => authenticated(request, (_, __) async {
               final body = jsonDecode(await request.readAsString());
               final user = User();
               user.name = body['username'];
@@ -31,7 +31,7 @@ class UserRouter {
 
     app.put(
         '/<id>',
-        (Request request, String id) => authenticated(request, (_) async {
+        (Request request, String id) => authenticated(request, (_, __) async {
               final body = jsonDecode(await request.readAsString());
               final user = await User.findById(id);
               if (body.containsKey('username')) {
@@ -50,7 +50,7 @@ class UserRouter {
     app.delete(
         '/<id>',
         (Request request, String id) =>
-            authenticated(request, (loggedInUser) async {
+            authenticated(request, (loggedInUser, __) async {
               if (loggedInUser.id == id) {
                 return Response(400);
               }

@@ -48,4 +48,15 @@ class ApiKey {
       await connection.close();
     }
   }
+
+  Future delete() async {
+    final connection = await connect();
+    await connection.open();
+    try {
+      await connection.execute('DELETE FROM "api_key" WHERE id = @id',
+          substitutionValues: {'id': id});
+    } finally {
+      await connection.close();
+    }
+  }
 }

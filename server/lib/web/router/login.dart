@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:jinya_backup/database/exceptions/invalid_credentials_exception.dart';
 import 'package:jinya_backup/database/models/user.dart';
+import 'package:jinya_backup/web/middleware/authenticated_middleware.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -16,11 +16,17 @@ class LoginRouter {
 
         return Response.ok(jsonEncode(result));
       } catch (e) {
-        if (e is InvalidCredentialsException) {
-          return Response.forbidden('Invalid credentials');
-        }
+        return Response.forbidden('Invalid credentials');
       }
     });
+
+    app.delete(
+        '/',
+        (Request request) => authenticated(request, (_, token) async {
+              await token.delete();
+
+              return Response(204);
+            }));
 
     return app;
   }
