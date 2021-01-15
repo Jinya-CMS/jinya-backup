@@ -138,6 +138,10 @@ class BackupJob {
             'remote_path': remotePath,
             'local_path': localPath,
           });
+      final directory = Directory(localPath);
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
     } finally {
       await connection.close();
     }
@@ -147,6 +151,9 @@ class BackupJob {
     final connection = await connect();
     await connection.open();
     try {
+      await connection.execute(
+          'DELETE FROM "stored_backup" WHERE backup_job_id = @id',
+          substitutionValues: {'id': id});
       await connection.execute('DELETE FROM "backup_job" WHERE id = @id',
           substitutionValues: {'id': id});
     } finally {
