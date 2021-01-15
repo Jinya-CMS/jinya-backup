@@ -64,7 +64,7 @@ class StoredBackup {
     await connection.open();
     try {
       final result = await connection.mappedResultsQuery(
-          'SELECT id, name, full_path, backup_date, backup_job_id FROM "stored_backup" WHERE backup_job_id=@id',
+          'SELECT id, name, full_path, backup_date, backup_job_id FROM "stored_backup" WHERE backup_job_id=@id ORDER BY backup_date',
           substitutionValues: {'id': backupJobId});
 
       final backups = <StoredBackup>[];
@@ -88,6 +88,23 @@ class StoredBackup {
       if (await file.exists()) {
         await file.delete();
       }
+    } finally {
+      await connection.close();
+    }
+  }
+
+  Future create() async {
+    final connection = await connect();
+    await connection.open();
+    try {
+      await connection.execute(
+          'INSERT INTO "stored_backup" (name, backup_job_id, backup_date, full_path) VALUES (@name, @backup_job_id, @backup_date, @full_path)',
+          substitutionValues: {
+            'name': name,
+            'backup_job_id': job.id,
+            'backup_date': backupDate,
+            'full_path': fullPath,
+          });
     } finally {
       await connection.close();
     }

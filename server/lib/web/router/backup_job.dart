@@ -1,12 +1,59 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+import 'dart:isolate';
 
+import 'package:crypto/crypto.dart' as crypto;
+import 'package:dotenv/dotenv.dart';
+import 'package:ftpconnect/ftpconnect.dart';
 import 'package:jinya_backup/database/models/backup_job.dart';
 import 'package:jinya_backup/database/models/stored_backup.dart';
 import 'package:jinya_backup/web/middleware/authenticated_middleware.dart';
+import 'package:path/path.dart';
+import 'package:pedantic/pedantic.dart' as pedantic;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
+import 'package:uuid/uuid.dart';
 
 class BackupJobRouter {
+  static Future downloadFile(id) async {
+    load();
+    final job = await BackupJob.findById(id);
+    final directory = await Directory(Directory.systemTemp.path).createTemp();
+    final file = File(join(directory.absolute.path, Uuid().v4()));
+    if (!await file.exists()) {
+      await file.create(recursive: true);
+    }
+
+    final ftpClient = FTPConnect(job.host,
+        pass: job.password, user: job.username, port: job.port);
+    try {
+      await ftpClient.connect();
+      log('Connected to ftp server');
+      await ftpClient.downloadFile(job.remotePath, file);
+      log('File downloaded');
+      final data = await file.readAsBytes();
+      final filename =
+          join(job.localPath, crypto.sha512.convert(data).toString());
+      final outputFile = File(filename);
+      final inStream = file.openRead();
+      final outStream = outputFile.openWrite();
+      log('Save file to backup location');
+      await inStream.pipe(outStream);
+
+      final backup = StoredBackup();
+      backup.fullPath = filename;
+      backup.name = basename(job.remotePath);
+      backup.backupDate = DateTime.now();
+      backup.job = job;
+      await backup.create();
+      await Future.delayed(const Duration(seconds: 100));
+    } finally {
+      await ftpClient.disconnect();
+      log('Disconnected to ftp server');
+    }
+  }
+
   Router get router {
     return Router()
       ..get(
@@ -30,6 +77,17 @@ class BackupJobRouter {
                 try {
                   final backups = await StoredBackup.findByBackupJob(id);
                   return Response.ok(jsonEncode(backups));
+                } catch (e) {
+                  return Response.notFound(null);
+                }
+              }))
+      ..post(
+          '/<id>/backup',
+          (Request request, String id) => authenticated(request, (_, __) async {
+                try {
+                  pedantic.unawaited(Isolate.spawn(downloadFile, id));
+
+                  return Response(200);
                 } catch (e) {
                   return Response.notFound(null);
                 }
