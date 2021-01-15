@@ -13,5 +13,7 @@ Future<Response> authenticated(
     if (e is NoResultException) {
       return Response(401);
     }
+
+    return Response.internalServerError();
   }
 }

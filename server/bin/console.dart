@@ -93,7 +93,7 @@ void main(List<String> args) async {
           id uuid primary key default uuid_generate_v4(),
           full_path text not null,
           name text not null,
-          backup_date date not null default now(),
+          backup_date timestamp not null default now(),
           backup_job_id uuid references "backup_job"(id)
         )
         ''');

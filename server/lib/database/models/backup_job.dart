@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:dotenv/dotenv.dart';
@@ -111,6 +112,10 @@ class BackupJob {
             'remote_path': remotePath,
             'local_path': localPath,
           });
+      final directory = Directory(localPath);
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
     } finally {
       await connection.close();
     }
