@@ -84,7 +84,9 @@ void main(List<String> args) async {
       await connection.execute('''
         CREATE TABLE "stored_backup" (
           id uuid primary key default uuid_generate_v4(),
-          full_path text not null
+          full_path text not null,
+          backup_date date not null default now(),
+          backup_job_id uuid references "backup_job"(id)
         )
         ''');
       // language=sql
@@ -107,5 +109,6 @@ void main(List<String> args) async {
 
     stdout.writeln('Write dotenv variable');
     await _writeDotEnv(host, port, user, password, database);
+    exit(0);
   }
 }
