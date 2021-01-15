@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:dotenv/dotenv.dart' as dotenv;
+import 'package:jinya_backup/web/router/backup_job.dart';
 import 'package:jinya_backup/web/router/login.dart';
 import 'package:jinya_backup/web/router/user.dart';
 import 'package:shelf/shelf_io.dart' as io;
@@ -28,6 +29,7 @@ void main(List<String> args) async {
   final app = Router();
   app.mount('/api/user/', UserRouter().router);
   app.mount('/api/login/', LoginRouter().router);
+  app.mount('/api/backup-job/', BackupJobRouter().router);
 
   final server = await io.serve(app, _hostname, port);
   print('Serving at http://${server.address.host}:${server.port}');

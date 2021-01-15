@@ -7,60 +7,68 @@ import 'package:shelf_router/shelf_router.dart';
 
 class UserRouter {
   Router get router {
-    final app = Router();
-    app.get(
-        '/',
-        (Request request) => authenticated(request,
-            (_, __) async => Response.ok(jsonEncode(await User.findAll()))));
-    app.get(
-        '/<id>',
-        (Request request, String id) => authenticated(request,
-            (_, __) async => Response.ok(jsonEncode(await User.findById(id)))));
-
-    app.post(
-        '/',
-        (Request request) => authenticated(request, (_, __) async {
-              final body = jsonDecode(await request.readAsString());
-              final user = User();
-              user.name = body['username'];
-              user.password = body['password'];
-              await user.create();
-
-              return Response(204);
-            }));
-
-    app.put(
-        '/<id>',
-        (Request request, String id) => authenticated(request, (_, __) async {
-              final body = jsonDecode(await request.readAsString());
-              final user = await User.findById(id);
-              if (body.containsKey('username')) {
+    return Router()
+      ..get(
+          '/',
+          (Request request) => authenticated(request,
+              (_, __) async => Response.ok(jsonEncode(await User.findAll()))))
+      ..get(
+          '/<id>',
+          (Request request, String id) => authenticated(request, (_, __) async {
+                try {
+                  return Response.ok(jsonEncode(await User.findById(id)));
+                } catch (e) {
+                  return Response.notFound(null);
+                }
+              }))
+      ..post(
+          '/',
+          (Request request) => authenticated(request, (_, __) async {
+                final body = jsonDecode(await request.readAsString());
+                final user = User();
                 user.name = body['username'];
-              }
-
-              if (body.containsKey('password')) {
                 user.password = body['password'];
-              }
+                await user.create();
 
-              await user.update();
+                return Response(201);
+              }))
+      ..put(
+          '/<id>',
+          (Request request, String id) => authenticated(request, (_, __) async {
+                final body = jsonDecode(await request.readAsString());
+                try {
+                  final user = await User.findById(id);
+                  if (body.containsKey('username')) {
+                    user.name = body['username'];
+                  }
 
-              return Response(204);
-            }));
+                  if (body.containsKey('password')) {
+                    user.password = body['password'];
+                  }
 
-    app.delete(
-        '/<id>',
-        (Request request, String id) =>
-            authenticated(request, (loggedInUser, __) async {
-              if (loggedInUser.id == id) {
-                return Response(400);
-              }
+                  await user.update();
 
-              final user = await User.findById(id);
-              await user.delete();
+                  return Response(204);
+                } catch (e) {
+                  return Response.notFound(null);
+                }
+              }))
+      ..delete(
+          '/<id>',
+          (Request request, String id) =>
+              authenticated(request, (loggedInUser, __) async {
+                if (loggedInUser.id == id) {
+                  return Response(400);
+                }
 
-              return Response(204);
-            }));
+                try {
+                  final user = await User.findById(id);
+                  await user.delete();
 
-    return app;
+                  return Response(204);
+                } catch (e) {
+                  return Response.notFound(null);
+                }
+              }));
   }
 }
