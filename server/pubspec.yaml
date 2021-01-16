@@ -18,3 +18,4 @@ dependencies:
   ftpconnect: 0.2.1
   pedantic: 1.9.2
   path: 1.7.0
+  mime_type: 0.3.2

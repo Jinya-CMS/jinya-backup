@@ -5,6 +5,8 @@ import 'package:dotenv/dotenv.dart' as dotenv;
 import 'package:jinya_backup/web/router/backup_job.dart';
 import 'package:jinya_backup/web/router/login.dart';
 import 'package:jinya_backup/web/router/user.dart';
+import 'package:mime_type/mime_type.dart';
+import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
 
@@ -30,7 +32,26 @@ void main(List<String> args) async {
   app.mount('/api/user/', UserRouter().router);
   app.mount('/api/login/', LoginRouter().router);
   app.mount('/api/backup-job/', BackupJobRouter().router);
-
+  app.all('/<result|.*>', (Request request, String result) async {
+    try {
+      if (result == '' || result == '/') {
+        return Response.ok(
+            File('${Directory.current.path}/frontend/index.html').openRead(),
+            headers: {
+              HttpHeaders.contentTypeHeader:
+                  mime('${Directory.current.path}/frontend/index.html')
+            });
+      }
+      return Response.ok(
+          File('${Directory.current.path}/frontend/${result}').openRead(),
+          headers: {
+            HttpHeaders.contentTypeHeader:
+                mime('${Directory.current.path}/frontend/${result}')
+          });
+    } catch (e) {
+      return Response.notFound(null);
+    }
+  });
   final server = await io.serve(app, _hostname, port);
   print('Serving at http://${server.address.host}:${server.port}');
 }

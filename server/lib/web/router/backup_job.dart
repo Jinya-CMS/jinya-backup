@@ -81,17 +81,15 @@ class BackupJobRouter {
                   return Response.notFound(null);
                 }
               }))
-      ..post(
-          '/<id>/backup',
-          (Request request, String id) => authenticated(request, (_, __) async {
-                try {
-                  pedantic.unawaited(Isolate.spawn(downloadFile, id));
+      ..post('/<id>/backup', (Request request, String id) async {
+        try {
+          pedantic.unawaited(Isolate.spawn(downloadFile, id));
 
-                  return Response(200);
-                } catch (e) {
-                  return Response.notFound(null);
-                }
-              }))
+          return Response(200);
+        } catch (e) {
+          return Response.notFound(null);
+        }
+      })
       ..delete(
           '/<id>/backup',
           (Request request, String id) => authenticated(request, (_, __) async {

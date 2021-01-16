@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Jinya Backup</title>
+    <link rel="stylesheet" href="semantic/dist/semantic.min.css">
+</head>
+<body>
+<nav class="ui top attached inverted teal menu">
+    <span class="header item">Jinya Backup</span>
+    <a class="item" data-action="users" href="#users">Users</a>
+    <a class="item" data-action="jobs" href="#jobs">Backup Jobs</a>
+</nav>
+<div style="margin-top: 40px;">
+    <div class="ui teal segment" data-role="content">
+    </div>
+</div>
+<form class="ui modal" data-role="login-modal">
+    <div class="header">
+        Login
+    </div>
+    <div class="content">
+        <div class="ui form" data-role="login-form">
+            <div class="ui error message">
+                <div class="header">Wrong credentials</div>
+                <p>You entered wrong credentials, please check them and try again.</p>
+            </div>
+            <div class="field">
+                <label for="username">Username</label>
+                <input id="username" type="text" name="username" placeholder="Username">
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" placeholder="Password">
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <button type="button" class="ui black deny button" onclick="window.close()">
+            Cancel
+        </button>
+        <button type="submit" class="ui positive right labeled icon button">
+            Login
+            <i class="checkmark icon"></i>
+        </button>
+    </div>
+</form>
+<form class="ui modal" data-role="add-user-modal">
+    <div class="header">
+        Add user
+    </div>
+    <div class="content">
+        <div class="ui form" data-role="login-form">
+            <div class="field">
+                <label for="add_username">Username</label>
+                <input required id="add_username" type="text" name="username" placeholder="Username">
+            </div>
+            <div class="field">
+                <label for="add_password">Password</label>
+                <input required id="add_password" type="password" name="password" placeholder="Password">
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <button type="button" class="ui black deny button">
+            Cancel
+        </button>
+        <button type="submit" class="ui positive right labeled icon button">
+            Save user
+            <i class="checkmark icon"></i>
+        </button>
+    </div>
+</form>
+<form class="ui modal" data-role="edit-user-modal">
+    <div class="header">
+        Edit user
+    </div>
+    <div class="content">
+        <div class="ui form" data-role="login-form">
+            <div class="field">
+                <label for="edit_username">Username</label>
+                <input required id="edit_username" type="text" name="username" placeholder="Username">
+            </div>
+            <div class="field">
+                <label for="edit_password">Password</label>
+                <input id="edit_password" type="password" name="password" placeholder="Password">
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <button type="button" class="ui black deny button">
+            Cancel
+        </button>
+        <button type="submit" class="ui positive right labeled icon button">
+            Save user
+            <i class="checkmark icon"></i>
+        </button>
+    </div>
+</form>
+<form class="ui modal" data-role="add-job-modal">
+    <div class="header">
+        Add FTP job
+    </div>
+    <div class="content">
+        <div class="ui form" data-role="login-form">
+            <div class="field">
+                <label for="add_name">Name</label>
+                <input required id="add_name" type="text" name="name" placeholder="Name">
+            </div>
+            <div class="field">
+                <label for="add_host">Host</label>
+                <input required id="add_host" type="text" name="host" placeholder="Host">
+            </div>
+            <div class="field">
+                <label for="add_port">Port</label>
+                <input required id="add_port" type="text" name="port" placeholder="Port">
+            </div>
+            <div class="field">
+                <label for="add_ftp_username">Username</label>
+                <input required id="add_ftp_username" type="text" name="username" placeholder="Username">
+            </div>
+            <div class="field">
+                <label for="add_ftp_password">Password</label>
+                <input required id="add_ftp_password" type="password" name="password" placeholder="Password">
+            </div>
+            <div class="field">
+                <label for="add_ftp_remote_path">Remote path</label>
+                <input required id="add_ftp_remote_path" type="text" name="remote_path" placeholder="Remote path">
+            </div>
+            <div class="field">
+                <label for="add_ftp_local_path">Local path</label>
+                <input required id="add_ftp_local_path" type="text" name="local_path" placeholder="Local path">
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <button type="button" class="ui black deny button">
+            Cancel
+        </button>
+        <button type="submit" class="ui positive right labeled icon button">
+            Save job
+            <i class="checkmark icon"></i>
+        </button>
+    </div>
+</form>
+<form class="ui modal" data-role="edit-job-modal">
+    <div class="header">
+        Edit FTP job
+    </div>
+    <div class="content">
+        <div class="ui form" data-role="login-form">
+            <div class="field">
+                <label for="edit_name">Name</label>
+                <input required id="edit_name" type="text" name="name" placeholder="Name">
+            </div>
+            <div class="field">
+                <label for="edit_host">Host</label>
+                <input required id="edit_host" type="text" name="host" placeholder="Host">
+            </div>
+            <div class="field">
+                <label for="edit_port">Port</label>
+                <input required id="edit_port" type="text" name="port" placeholder="Port">
+            </div>
+            <div class="field">
+                <label for="edit_ftp_username">Username</label>
+                <input required id="edit_ftp_username" type="text" name="username" placeholder="Username">
+            </div>
+            <div class="field">
+                <label for="edit_ftp_password">Password</label>
+                <input id="edit_ftp_password" type="password" name="password" placeholder="Password">
+            </div>
+            <div class="field">
+                <label for="edit_ftp_remote_path">Remote path</label>
+                <input required id="edit_ftp_remote_path" type="text" name="remote_path" placeholder="Remote path">
+            </div>
+            <div class="field">
+                <label for="edit_ftp_local_path">Local path</label>
+                <input required id="edit_ftp_local_path" type="text" name="local_path" placeholder="Local path">
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <button type="button" class="ui black deny button">
+            Cancel
+        </button>
+        <button type="submit" class="ui positive right labeled icon button">
+            Save job
+            <i class="checkmark icon"></i>
+        </button>
+    </div>
+</form>
+<div class="ui basic modal" data-role="delete-user-modal">
+    <div class="ui icon header">
+        <i class="delete icon"></i>
+        Delete user
+    </div>
+    <div class="content">
+        <p>Do you want to delete the user?</p>
+    </div>
+    <div class="actions">
+        <button class="ui red basic cancel inverted button">
+            <i class="remove icon"></i>
+            No
+        </button>
+        <button data-action="delete" class="ui green ok inverted button">
+            <i class="checkmark icon"></i>
+            Yes
+        </button>
+    </div>
+</div>
+<div class="ui basic modal" data-role="delete-job-modal">
+    <div class="ui icon header">
+        <i class="delete icon"></i>
+        Delete job
+    </div>
+    <div class="content">
+        <p>Do you want to delete the job?</p>
+    </div>
+    <div class="actions">
+        <button class="ui red basic cancel inverted button">
+            <i class="remove icon"></i>
+            No
+        </button>
+        <button data-action="delete" class="ui green ok inverted button">
+            <i class="checkmark icon"></i>
+            Yes
+        </button>
+    </div>
+</div>
+<div class="ui basic modal" data-role="delete-backup-modal">
+    <div class="ui icon header">
+        <i class="delete icon"></i>
+        Delete backup
+    </div>
+    <div class="content">
+        <p>Do you want to delete the backup?</p>
+    </div>
+    <div class="actions">
+        <button class="ui red basic cancel inverted button">
+            <i class="remove icon"></i>
+            No
+        </button>
+        <button data-action="delete" class="ui green ok inverted button">
+            <i class="checkmark icon"></i>
+            Yes
+        </button>
+    </div>
+</div>
+<script id="users" type="text/x-handlebars-template">
+    <button class="ui primary button" data-action="add">
+        Create user
+    </button>
+    <table class="ui table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#users}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>
+                    <div data-id="{{id}}" class="ui animated small teal button" data-action="edit">
+                        <div class="visible content">Edit</div>
+                        <div class="hidden content">
+                            <i class="ui pen icon"></i>
+                        </div>
+                    </div>
+                    <div data-id="{{id}}" class="ui animated small negative button" data-action="delete">
+                        <div class="visible content">Delete</div>
+                        <div class="hidden content">
+                            <i class="trash icon"></i>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {{/users}}
+        </tbody>
+    </table>
+</script>
+<script id="jobs" type="text/x-handlebars-template">
+    <button class="ui primary button" data-action="add">
+        Create job
+    </button>
+    <table class="ui table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Host</th>
+            <th>Port</th>
+            <th>Type</th>
+            <th>Remote path</th>
+            <th>Local path</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#jobs}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{host}}</td>
+                <td>{{port}}</td>
+                <td>{{type}}</td>
+                <td>{{remotePath}}</td>
+                <td>{{localPath}}</td>
+                <td>
+                    <div data-id="{{id}}" class="ui small teal button" data-action="backups">Backups</div>
+                    <div data-id="{{id}}" class="ui animated small teal button" data-action="edit">
+                        <div class="visible content">Edit</div>
+                        <div class="hidden content">
+                            <i class="ui pen icon"></i>
+                        </div>
+                    </div>
+                    <div data-id="{{id}}" class="ui animated small negative button" data-action="delete">
+                        <div class="visible content">Delete</div>
+                        <div class="hidden content">
+                            <i class="trash icon"></i>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {{/jobs}}
+        </tbody>
+    </table>
+</script>
+<script id="backups" type="text/x-handlebars-template">
+    <table class="ui table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Path</th>
+            <th>Backup Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#backups}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{fullPath}}</td>
+                <td>{{backupDate}}</td>
+                <td>
+                    <div data-id="{{id}}" class="ui animated small teal button" data-action="download">
+                        <div class="visible content">Download</div>
+                        <div class="hidden content">
+                            <i class="download icon"></i>
+                        </div>
+                    </div>
+                    <div data-id="{{id}}" class="ui animated small negative button" data-action="delete">
+                        <div class="visible content">Delete</div>
+                        <div class="hidden content">
+                            <i class="trash icon"></i>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {{/backups}}
+        </tbody>
+    </table>
+</script>
+<script src="lib/js/jquery.min.js"></script>
+<script src="lib/js/handlebars.min.js"></script>
+<script src="semantic/dist/semantic.min.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

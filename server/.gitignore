@@ -9,3 +9,4 @@ build/
 doc/api/
 /.env
 /backups/
+/frontend/node_modules/
