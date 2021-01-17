@@ -7,11 +7,13 @@
 </head>
 <body>
 <nav class="ui top attached inverted teal menu">
-    <span class="header item">Jinya Backup</span>
-    <a class="item" data-action="users" href="#users">Users</a>
-    <a class="item" data-action="jobs" href="#jobs">Backup Jobs</a>
+    <div class="ui container" style="padding-right: 5%; padding-left: 5%; width: unset; margin: 0;">
+        <span class="header item">Jinya Backup</span>
+        <a class="item" data-action="users" href="#users">Users</a>
+        <a class="item" data-action="jobs" href="#jobs">Backup Jobs</a>
+    </div>
 </nav>
-<div style="margin-top: 40px;">
+<div style="margin-top: 40px; padding-left: 5%; padding-right: 5%">
     <div class="ui teal segment" data-role="content">
     </div>
 </div>
@@ -348,12 +350,13 @@
                 <td>{{fullPath}}</td>
                 <td>{{backupDate}}</td>
                 <td>
-                    <div data-id="{{id}}" class="ui animated small teal button" data-action="download">
-                        <div class="visible content">Download</div>
-                        <div class="hidden content">
+                    <a target="_blank" href="/api/backup-job/backup/backup/{{id}}" data-id="{{id}}"
+                       class="ui animated small teal button">
+                        <span class="visible content">Download</span>
+                        <span class="hidden content">
                             <i class="download icon"></i>
-                        </div>
-                    </div>
+                        </span>
+                    </a>
                     <div data-id="{{id}}" class="ui animated small negative button" data-action="delete">
                         <div class="visible content">Delete</div>
                         <div class="hidden content">

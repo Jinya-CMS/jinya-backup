@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:jinya_backup/database/models/user.dart';
 import 'package:jinya_backup/web/middleware/authenticated_middleware.dart';
@@ -13,7 +14,13 @@ class LoginRouter {
         try {
           final result = await User.login(body['username'], body['password']);
 
-          return Response.ok(jsonEncode(result));
+          return Response.ok(
+            jsonEncode(result),
+            headers: {
+              HttpHeaders.setCookieHeader:
+                  'Jinya-Auth=${result.token}; HttpOnly; Path=/',
+            },
+          );
         } catch (e) {
           return Response.forbidden('Invalid credentials');
         }

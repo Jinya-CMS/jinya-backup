@@ -81,6 +81,24 @@ class BackupJobRouter {
                   return Response.notFound(null);
                 }
               }))
+      ..get(
+          '/<id>/backup/<backupId>',
+          (Request request, String _, String backupId) =>
+              authenticated(request, (_, __) async {
+                try {
+                  final backup = await StoredBackup.findById(backupId);
+                  final file = File(backup.fullPath).openRead();
+                  return Response.ok(
+                    file,
+                    headers: {
+                      'Content-Disposition':
+                          'attachment; filename="${backup.name}"',
+                    },
+                  );
+                } catch (e) {
+                  return Response.notFound(null);
+                }
+              }))
       ..post('/<id>/backup', (Request request, String id) async {
         try {
           pedantic.unawaited(Isolate.spawn(downloadFile, id));

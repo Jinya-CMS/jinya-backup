@@ -3,7 +3,7 @@ let authenticationToken = '';
 async function request(url, method, body = {}) {
   const data = {
     method,
-    headers: new Headers({ 'Jinya-Auth-Key': authenticationToken })
+    // headers: new Headers({ 'Jinya-Auth-Key': authenticationToken })
   };
   if (method !== 'GET' && method !== 'HEAD') {
     data.body = JSON.stringify(body);
@@ -175,7 +175,7 @@ $(() => {
           $deleteUserModal.data('id', id);
           $deleteUserModal.modal('show');
         });
-        $content.find('[data-action=add]').on('click', (e) => {
+        $content.find('[data-action=add]').on('click', () => {
           $addUserModal.find('input').val('');
           $addUserModal.modal('show');
         });
@@ -207,7 +207,7 @@ $(() => {
           $deleteJobModal.data('id', id);
           $deleteJobModal.modal('show');
         })
-        $content.find('[data-action=add]').on('click', (e) => {
+        $content.find('[data-action=add]').on('click', () => {
           $addJobModal.find('input').val('');
           $addJobModal.modal('show');
         });
