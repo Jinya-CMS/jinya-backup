@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:cryptography/cryptography.dart';
+import 'package:dotenv/dotenv.dart';
 import 'package:jinya_backup/database/models/user.dart';
 import 'package:postgres/postgres.dart';
 
@@ -18,13 +19,14 @@ void _writeDotEnv(String host, String port, String user, String password,
     'DB_USER=${user}',
     'DB_PASSWORD=${password}',
     'DB_DATABASE=${database}',
-    'DB_SECRET_KEY=${base64Encode(await secretKey.extract())}',
-    'DB_SECRET_NONCE=${base64Encode(nonce.bytes)}',
+    'DB_SECRET_KEY=${env['DB_SECRET_KEY'] ?? base64Encode(await secretKey.extract())}',
+    'DB_SECRET_NONCE=${env['DB_SECRET_NONCE'] ?? base64Encode(nonce.bytes)}',
   ];
   await dotEnvFile.writeAsString(envVars.join('\n'));
 }
 
 void main(List<String> args) async {
+  load();
   final command = ArgParser();
   final parser = ArgParser();
   parser.addCommand('install', command);
@@ -39,18 +41,14 @@ void main(List<String> args) async {
   final result = parser.parse(args);
   if (result.command?.name == 'install') {
     final args = result.command;
-    final host = args['dbhost'] ??
-        String.fromEnvironment('DB_HOST', defaultValue: 'localhost');
-    final port = args['dbport'] ??
-        String.fromEnvironment('DB_PORT', defaultValue: '5432');
-    final user =
-        args['dbuser'] ?? String.fromEnvironment('DB_USER', defaultValue: '');
-    final password = args['dbpassword'] ??
-        String.fromEnvironment('DB_PASSWORD', defaultValue: '');
-    final database = args['dbdatabase'] ??
-        String.fromEnvironment('DB_DATABASE', defaultValue: 'jinya-backup');
+    final host = args['dbhost'] ?? env['DB_HOST'] ?? 'localhost';
+    final port = args['dbport'] ?? env['DB_PORT'] ?? '5432';
+    final user = args['dbuser'] ?? env['DB_USER'] ?? '';
+    final password = args['dbpassword'] ?? env['DB_PASSWORD'] ?? '';
+    final database = args['dbdatabase'] ?? env['DB_DATABASE'] ?? 'jinya-backup';
 
     stdout.writeln('Start database creation');
+    var databaseExists = false;
     final connection = PostgreSQLConnection(host, int.parse(port), database,
         password: password, username: user);
     await connection.open();
@@ -59,7 +57,7 @@ void main(List<String> args) async {
       await connection.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
       // language=sql
       await connection.execute('''
-        CREATE TABLE "user" (
+        CREATE TABLE "users" (
           id uuid primary key default uuid_generate_v4(),
           name text unique not null,
           password text not null
@@ -70,7 +68,7 @@ void main(List<String> args) async {
         CREATE TABLE "api_key" (
           id uuid primary key default uuid_generate_v4(),
           token text not null unique,
-          user_id uuid references "user"(id)
+          user_id uuid references "users"(id)
         )
         ''');
       // language=sql
@@ -105,15 +103,19 @@ void main(List<String> args) async {
         ''');
     }).catchError((error) {
       stdout.writeln(error);
+      databaseExists = true;
     });
 
-    stdout.writeln('Create first user');
-    await connection.execute(
-        'INSERT INTO "user" (name, password) VALUES (@name, @password)',
-        substitutionValues: {
-          'name': args['username'],
-          'password': User.hashPassword(args['password'])
-        });
+    if (!databaseExists) {
+      stdout.writeln('Create first user');
+      await connection.execute(
+          'INSERT INTO "users" (name, password) VALUES (@name, @password)',
+          substitutionValues: {
+            'name': args['username'] ?? env['DB_FIRST_USER_NAME'],
+            'password': User.hashPassword(
+                args['password'] ?? env['DB_FIRST_USER_PASSWORD'])
+          });
+    }
 
     stdout.writeln('Write dotenv variable');
     await _writeDotEnv(host, port, user, password, database);

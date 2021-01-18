@@ -14,7 +14,7 @@ class ApiKey {
     await connection.open();
     try {
       final result = await connection.mappedResultsQuery(
-          'SELECT "api_key".id, "api_key".token, "user".id, "user".name FROM "api_key" JOIN "user" ON "user".id = "api_key".user_id WHERE "api_key".token = @token',
+          'SELECT "api_key".id, "api_key".token, "users".id, "users".name FROM "api_key" JOIN "users" ON "users".id = "api_key".user_id WHERE "api_key".token = @token',
           substitutionValues: {'token': token});
 
       if (result.isEmpty) {
@@ -25,8 +25,8 @@ class ApiKey {
       api_key.token = result.first['api_key']['token'];
       api_key.id = result.first['api_key']['id'];
       api_key.user = User();
-      api_key.user.name = result.first['user']['name'];
-      api_key.user.id = result.first['user']['id'];
+      api_key.user.name = result.first['users']['name'];
+      api_key.user.id = result.first['users']['id'];
 
       return api_key;
     } finally {

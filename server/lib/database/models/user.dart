@@ -32,13 +32,13 @@ class User {
     await connection.open();
     try {
       final result =
-          await connection.mappedResultsQuery('SELECT id, name FROM "user"');
+          await connection.mappedResultsQuery('SELECT id, name FROM "users"');
 
       final users = <User>[];
       for (final row in result) {
         final user = User();
-        user.name = row['user']['name'];
-        user.id = row['user']['id'];
+        user.name = row['users']['name'];
+        user.id = row['users']['id'];
         users.add(user);
       }
 
@@ -53,7 +53,7 @@ class User {
     await connection.open();
     try {
       final result = await connection.mappedResultsQuery(
-          'SELECT id, name, password FROM "user" WHERE name = @name',
+          'SELECT id, name, password FROM "users" WHERE name = @name',
           substitutionValues: {'name': name});
 
       if (result.isEmpty) {
@@ -61,9 +61,9 @@ class User {
       }
 
       final user = User();
-      user.name = result.first['user']['name'];
-      user.password = result.first['user']['password'];
-      user.id = result.first['user']['id'];
+      user.name = result.first['users']['name'];
+      user.password = result.first['users']['password'];
+      user.id = result.first['users']['id'];
 
       return user;
     } finally {
@@ -76,7 +76,7 @@ class User {
     await connection.open();
     try {
       final result = await connection.mappedResultsQuery(
-          'SELECT u.id, u.name FROM "user" u WHERE u.id = @id',
+          'SELECT u.id, u.name FROM "users" u WHERE u.id = @id',
           substitutionValues: {'id': id});
 
       if (result.isEmpty) {
@@ -84,8 +84,8 @@ class User {
       }
 
       final user = User();
-      user.name = result.first['user']['name'];
-      user.id = result.first['user']['id'];
+      user.name = result.first['users']['name'];
+      user.id = result.first['users']['id'];
 
       return user;
     } finally {
@@ -103,7 +103,7 @@ class User {
     await connection.open();
     try {
       await connection.execute(
-          'INSERT INTO "user" (name, password) VALUES (@name, @password)',
+          'INSERT INTO "users" (name, password) VALUES (@name, @password)',
           substitutionValues: {
             'name': name,
             'password': hashPassword(password),
@@ -117,14 +117,14 @@ class User {
     final connection = await connect();
     await connection.open();
     try {
-      await connection.execute('UPDATE "user" SET name = @name WHERE id = @id',
+      await connection.execute('UPDATE "users" SET name = @name WHERE id = @id',
           substitutionValues: {
             'name': name,
             'id': id,
           });
       if (password != null && password.isNotEmpty) {
         await connection.execute(
-            'UPDATE "user" SET password = @password WHERE id = @id',
+            'UPDATE "users" SET password = @password WHERE id = @id',
             substitutionValues: {
               'password': hashPassword(password),
               'id': id,
@@ -139,7 +139,7 @@ class User {
     final connection = await connect();
     await connection.open();
     try {
-      await connection.execute('DELETE FROM "user" WHERE id = @id',
+      await connection.execute('DELETE FROM "users" WHERE id = @id',
           substitutionValues: {'id': id});
     } finally {
       await connection.close();
