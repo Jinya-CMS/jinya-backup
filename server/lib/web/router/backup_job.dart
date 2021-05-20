@@ -25,8 +25,8 @@ class BackupJobRouter {
       await file.create(recursive: true);
     }
 
-    final ftpClient = FTPConnect(job.host,
-        pass: await job.getPassword(), user: job.username, port: job.port);
+    final ftpClient = FTPConnect(job.host!,
+        pass: await job.getPassword(), user: job.username!, port: job.port!);
     try {
       await ftpClient.connect();
       log('Connected to ftp server');
@@ -34,7 +34,7 @@ class BackupJobRouter {
       log('File downloaded');
       final data = await file.readAsBytes();
       final filename =
-          join(job.localPath, crypto.sha512.convert(data).toString());
+          join(job.localPath!, crypto.sha512.convert(data).toString());
       final outputFile = File(filename);
       final inStream = file.openRead();
       final outStream = outputFile.openWrite();
@@ -43,7 +43,7 @@ class BackupJobRouter {
 
       final backup = StoredBackup();
       backup.fullPath = filename;
-      backup.name = basename(job.remotePath);
+      backup.name = basename(job.remotePath!);
       backup.backupDate = DateTime.now();
       backup.job = job;
       await backup.create();
@@ -87,7 +87,7 @@ class BackupJobRouter {
               authenticated(request, (_, __) async {
                 try {
                   final backup = await StoredBackup.findById(backupId);
-                  final file = File(backup.fullPath).openRead();
+                  final file = File(backup.fullPath!).openRead();
                   return Response.ok(
                     file,
                     headers: {

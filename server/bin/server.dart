@@ -39,14 +39,14 @@ void main(List<String> args) async {
             File('${Directory.current.path}/frontend/index.html').openRead(),
             headers: {
               HttpHeaders.contentTypeHeader:
-                  mime('${Directory.current.path}/frontend/index.html')
+                  mime('${Directory.current.path}/frontend/index.html')!
             });
       }
       return Response.ok(
           File('${Directory.current.path}/frontend/$result').openRead(),
           headers: {
             HttpHeaders.contentTypeHeader:
-                mime('${Directory.current.path}/frontend/$result')
+            mime('${Directory.current.path}/frontend/$result')!
           });
     } catch (e) {
       return Response.notFound(null);

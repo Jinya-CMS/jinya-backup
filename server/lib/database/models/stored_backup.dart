@@ -5,11 +5,11 @@ import 'package:jinya_backup/database/exceptions/no_result_exception.dart';
 import 'package:jinya_backup/database/models/backup_job.dart';
 
 class StoredBackup {
-  String id;
-  String name;
-  String fullPath;
-  DateTime backupDate;
-  BackupJob job;
+  String? id;
+  String? name;
+  String? fullPath;
+  DateTime? backupDate;
+  late BackupJob job;
 
   static Future<StoredBackup> mapBackup(Map<String, dynamic> data) async {
     final backup = StoredBackup();
@@ -84,7 +84,7 @@ class StoredBackup {
     try {
       await connection.execute('DELETE FROM "stored_backup" WHERE id = @id',
           substitutionValues: {'id': id});
-      final file = File(fullPath);
+      final file = File(fullPath!);
       if (await file.exists()) {
         await file.delete();
       }
@@ -110,11 +110,12 @@ class StoredBackup {
     }
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'id': id,
         'name': name,
         'fullPath': fullPath,
-        'backupDate': backupDate.toIso8601String(),
+        'backupDate': backupDate!.toIso8601String(),
         'job': job.toJson(),
       };
 }

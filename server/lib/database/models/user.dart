@@ -8,13 +8,13 @@ import 'package:jinya_backup/database/models/api_key.dart';
 import 'package:uuid/uuid.dart';
 
 class User {
-  String id;
-  String name;
-  String password;
+  String? id;
+  String? name;
+  String? password;
 
   Map toJson() => {'id': id, 'name': name};
 
-  static Future<ApiKey> login(String name, String password) async {
+  static Future<ApiKey> login(String? name, String password) async {
     final user = await findByName(name);
     if (user.password == hashPassword(password)) {
       final apiKey = ApiKey();
@@ -37,8 +37,8 @@ class User {
       final users = <User>[];
       for (final row in result) {
         final user = User();
-        user.name = row['users']['name'];
-        user.id = row['users']['id'];
+        user.name = row['users']!['name'];
+        user.id = row['users']!['id'];
         users.add(user);
       }
 
@@ -48,7 +48,7 @@ class User {
     }
   }
 
-  static Future<User> findByName(String name) async {
+  static Future<User> findByName(String? name) async {
     final connection = await connect();
     await connection.open();
     try {
@@ -61,9 +61,9 @@ class User {
       }
 
       final user = User();
-      user.name = result.first['users']['name'];
-      user.password = result.first['users']['password'];
-      user.id = result.first['users']['id'];
+      user.name = result.first['users']!['name'];
+      user.password = result.first['users']!['password'];
+      user.id = result.first['users']!['id'];
 
       return user;
     } finally {
@@ -84,8 +84,8 @@ class User {
       }
 
       final user = User();
-      user.name = result.first['users']['name'];
-      user.id = result.first['users']['id'];
+      user.name = result.first['users']!['name'];
+      user.id = result.first['users']!['id'];
 
       return user;
     } finally {
@@ -106,7 +106,7 @@ class User {
           'INSERT INTO "users" (name, password) VALUES (@name, @password)',
           substitutionValues: {
             'name': name,
-            'password': hashPassword(password),
+            'password': hashPassword(password!),
           });
     } finally {
       await connection.close();
@@ -122,11 +122,11 @@ class User {
             'name': name,
             'id': id,
           });
-      if (password != null && password.isNotEmpty) {
+      if (password != null && password!.isNotEmpty) {
         await connection.execute(
             'UPDATE "users" SET password = @password WHERE id = @id',
             substitutionValues: {
-              'password': hashPassword(password),
+              'password': hashPassword(password!),
               'id': id,
             });
       }

@@ -5,9 +5,9 @@ import 'package:jinya_backup/database/models/user.dart';
 import 'package:shelf/shelf.dart';
 
 Future<Response> authenticated(
-    Request request, Function(User, ApiKey) fn) async {
+    Request request, Function(User?, ApiKey) fn) async {
   final header = request.headers['Jinya-Auth-Key'];
-  final cookieHeader = request.headers[HttpHeaders.cookieHeader];
+  final cookieHeader = request.headers[HttpHeaders.cookieHeader]!;
   final authCookie = cookieHeader.replaceAll(' ', '').split(';').singleWhere(
         (element) => element.startsWith('Jinya-Auth'),
         orElse: () => '',
@@ -17,7 +17,7 @@ Future<Response> authenticated(
       final authToken = authCookie.substring(authCookie.indexOf('=') + 1);
       final token = await ApiKey.findByToken(authToken);
       return fn(token.user, token);
-    } else if (header.isNotEmpty) {
+    } else if (header!.isNotEmpty) {
       final token = await ApiKey.findByToken(header);
       return fn(token.user, token);
     }

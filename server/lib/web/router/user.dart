@@ -57,7 +57,7 @@ class UserRouter {
           '/<id>',
           (Request request, String id) =>
               authenticated(request, (loggedInUser, __) async {
-                if (loggedInUser.id == id) {
+                if (loggedInUser!.id == id) {
                   return Response(400);
                 }
 

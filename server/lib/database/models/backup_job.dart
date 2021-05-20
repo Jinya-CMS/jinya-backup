@@ -2,30 +2,37 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:cryptography/dart.dart';
 import 'package:dotenv/dotenv.dart';
 import 'package:jinya_backup/database/connection.dart';
 import 'package:jinya_backup/database/exceptions/no_result_exception.dart';
 
 class BackupJob {
-  String id;
-  String name;
-  String host;
-  int port;
-  String type;
-  String username;
-  String _password;
+  String? id;
+  String? name;
+  String? host;
+  int? port;
+  String? type;
+  String? username;
+  String? _password;
 
   SecretKey _getSecretKey() {
-    return SecretKey(base64Decode(env['DB_SECRET_KEY']));
+    return SecretKey(base64Decode(env['DB_SECRET_KEY']!));
   }
 
   List<int> _getNonce() {
-    return base64Decode(env['DB_SECRET_NONCE']);
+    return base64Decode(env['DB_SECRET_NONCE']!);
+  }
+
+  Future<Mac> _getMac() async {
+    return DartChacha20Poly1305AeadMacAlgorithm()
+        .calculateMac(base64Decode(_password!), secretKey: _getSecretKey());
   }
 
   Future<String> getPassword() async {
     final cipherText = await Chacha20.poly1305Aead().decrypt(
-      SecretBox(base64Decode(_password), nonce: _getNonce(), mac: null),
+      SecretBox(base64Decode(_password!),
+          nonce: _getNonce(), mac: await _getMac()),
       secretKey: _getSecretKey(),
     );
 
@@ -41,8 +48,8 @@ class BackupJob {
     _password = base64Encode(cipherText.cipherText);
   }
 
-  String remotePath;
-  String localPath;
+  String? remotePath;
+  String? localPath;
 
   static Future<BackupJob> mapJob(Map<String, dynamic> data) async {
     final job = BackupJob();
@@ -59,7 +66,7 @@ class BackupJob {
     return job;
   }
 
-  static Future<BackupJob> findById(String id) async {
+  static Future<BackupJob> findById(String? id) async {
     final connection = await connect();
     await connection.open();
     try {
@@ -111,7 +118,7 @@ class BackupJob {
             'remote_path': remotePath,
             'local_path': localPath,
           });
-      final directory = Directory(localPath);
+      final directory = Directory(localPath!);
       if (!await directory.exists()) {
         await directory.create(recursive: true);
       }
@@ -137,7 +144,7 @@ class BackupJob {
             'remote_path': remotePath,
             'local_path': localPath,
           });
-      final directory = Directory(localPath);
+      final directory = Directory(localPath!);
       if (!await directory.exists()) {
         await directory.create(recursive: true);
       }

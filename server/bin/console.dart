@@ -40,7 +40,7 @@ void main(List<String> args) async {
     ..addOption('password');
   final result = parser.parse(args);
   if (result.command?.name == 'install') {
-    final args = result.command;
+    final args = result.command!;
     final host = args['dbhost'] ?? env['DB_HOST'] ?? 'localhost';
     final port = args['dbport'] ?? env['DB_PORT'] ?? '5432';
     final user = args['dbuser'] ?? env['DB_USER'] ?? '';
@@ -113,7 +113,7 @@ void main(List<String> args) async {
           substitutionValues: {
             'name': args['username'] ?? env['DB_FIRST_USER_NAME'],
             'password': User.hashPassword(
-                args['password'] ?? env['DB_FIRST_USER_PASSWORD'])
+                args['password'] ?? env['DB_FIRST_USER_PASSWORD']!)
           });
     }
 
