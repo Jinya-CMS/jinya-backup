@@ -26,7 +26,7 @@ class BackupJobRouter {
     }
 
     final ftpClient = FTPConnect(job.host,
-        pass: job.password, user: job.username, port: job.port);
+        pass: await job.getPassword(), user: job.username, port: job.port);
     try {
       await ftpClient.connect();
       log('Connected to ftp server');
@@ -137,7 +137,7 @@ class BackupJobRouter {
       ..post(
           '/',
           (Request request) => authenticated(request, (_, __) async {
-                final body = jsonDecode(await request.readAsString());
+            final body = jsonDecode(await request.readAsString());
                 final backupJob = BackupJob();
                 backupJob.localPath = body['localPath'];
                 backupJob.remotePath = body['remotePath'];
@@ -145,7 +145,7 @@ class BackupJobRouter {
                 backupJob.type = body['type'] ?? 'ftp';
                 backupJob.name = body['name'];
                 backupJob.port = body['port'] ?? 21;
-                backupJob.password = body['password'] ?? '';
+                await backupJob.setPassword(body['password'] ?? '');
                 backupJob.username = body['username'] ?? '';
                 await backupJob.create();
 
@@ -168,7 +168,8 @@ class BackupJobRouter {
                   backupJob.username = body['username'] ?? backupJob.username;
 
                   if (body.containsKey('password')) {
-                    backupJob.password = body['password'] ?? backupJob.password;
+                    await backupJob.setPassword(
+                        body['password'] ?? await backupJob.getPassword());
                   }
 
                   await backupJob.update();

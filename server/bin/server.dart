@@ -43,10 +43,10 @@ void main(List<String> args) async {
             });
       }
       return Response.ok(
-          File('${Directory.current.path}/frontend/${result}').openRead(),
+          File('${Directory.current.path}/frontend/$result').openRead(),
           headers: {
             HttpHeaders.contentTypeHeader:
-                mime('${Directory.current.path}/frontend/${result}')
+                mime('${Directory.current.path}/frontend/$result')
           });
     } catch (e) {
       return Response.notFound(null);

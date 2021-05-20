@@ -19,27 +19,26 @@ class BackupJob {
     return SecretKey(base64Decode(env['DB_SECRET_KEY']));
   }
 
-  Nonce _getNonce() {
-    return Nonce(base64Decode(env['DB_SECRET_NONCE']));
+  List<int> _getNonce() {
+    return base64Decode(env['DB_SECRET_NONCE']);
   }
 
-  String get password {
-    final cipherText = chacha20Poly1305Aead.decryptSync(
-      base64Decode(_password),
+  Future<String> getPassword() async {
+    final cipherText = await Chacha20.poly1305Aead().decrypt(
+      SecretBox(base64Decode(_password), nonce: _getNonce(), mac: null),
       secretKey: _getSecretKey(),
-      nonce: _getNonce(),
     );
 
     return utf8.decode(cipherText);
   }
 
-  set password(String password) {
-    final cipherText = chacha20Poly1305Aead.encryptSync(
+  Future setPassword(String password) async {
+    final cipherText = await Chacha20.poly1305Aead().encrypt(
       utf8.encode(password),
       secretKey: _getSecretKey(),
       nonce: _getNonce(),
     );
-    _password = base64Encode(cipherText);
+    _password = base64Encode(cipherText.cipherText);
   }
 
   String remotePath;

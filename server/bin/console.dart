@@ -10,17 +10,17 @@ import 'package:postgres/postgres.dart';
 void _writeDotEnv(String host, String port, String user, String password,
     String database) async {
   final dotEnvFile = File(Directory.current.absolute.path + '/.env');
-  final secretKey = await chacha20.newSecretKey();
-  final nonce = await chacha20.newNonce();
+  final secretKey = await Chacha20.poly1305Aead().newSecretKey();
+  final nonce = Chacha20.poly1305Aead().newNonce();
 
   final envVars = [
-    'DB_HOST=${host}',
-    'DB_PORT=${port}',
-    'DB_USER=${user}',
-    'DB_PASSWORD=${password}',
-    'DB_DATABASE=${database}',
-    'DB_SECRET_KEY=${env['DB_SECRET_KEY'] ?? base64Encode(await secretKey.extract())}',
-    'DB_SECRET_NONCE=${env['DB_SECRET_NONCE'] ?? base64Encode(nonce.bytes)}',
+    'DB_HOST=$host',
+    'DB_PORT=$port',
+    'DB_USER=$user',
+    'DB_PASSWORD=$password',
+    'DB_DATABASE=$database',
+    'DB_SECRET_KEY=${env['DB_SECRET_KEY'] ?? base64Encode(await secretKey.extractBytes())}',
+    'DB_SECRET_NONCE=${env['DB_SECRET_NONCE'] ?? base64Encode(nonce)}',
   ];
   await dotEnvFile.writeAsString(envVars.join('\n'));
 }
@@ -118,7 +118,7 @@ void main(List<String> args) async {
     }
 
     stdout.writeln('Write dotenv variable');
-    await _writeDotEnv(host, port, user, password, database);
+    _writeDotEnv(host, port, user, password, database);
     exit(0);
   }
 }

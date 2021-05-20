@@ -7,15 +7,15 @@ environment:
   sdk: '>=2.10.0 <3.0.0'
 
 dependencies:
-  args: 1.6.0
-  shelf: 0.7.9
-  postgres: 2.2.0
-  crypto: 2.1.5
-  dotenv: 2.0.0
-  shelf_router: 0.7.4
-  uuid: 2.2.2
-  cryptography: 1.4.1
-  ftpconnect: 0.2.1
-  pedantic: 1.9.2
-  path: 1.7.0
-  mime_type: 0.3.2
+  args: ^2.1.0
+  shelf: ^1.1.4
+  postgres: ^2.3.2
+  crypto: ^3.0.1
+  dotenv: ^3.0.0
+  shelf_router: ^1.0.0
+  uuid: ^3.0.4
+  cryptography: ^2.0.1
+  ftpconnect: ^1.0.0
+  pedantic: ^1.11.0
+  path: ^1.8.0
+  mime_type: ^1.0.0
