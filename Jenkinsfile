@@ -49,16 +49,18 @@ spec:
                 stage('Push docker image') {
                     steps {
                         container('docker') {
-                            sh "docker build -t registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER -f ./server/Dockerfile ."
-                            sh "docker tag registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:$BUILD_NUMBER"
-                            sh "docker tag registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:latest"
+                            dir('./server') {
+                                sh "docker build -t registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER -f ./Dockerfile ."
+                                sh "docker tag registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:$BUILD_NUMBER"
+                                sh "docker tag registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:latest"
 
-                            withDockerRegistry(credentialsId: 'nexus.imanuel.dev', url: 'https://registry-hosted.imanuel.dev') {
-                                sh "docker push registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER"
-                            }
-                            withDockerRegistry(credentialsId: 'hub.docker.com', url: '') {
-                                sh "docker push jinyacms/jinya-backup:$BUILD_NUMBER"
-                                sh "docker push jinyacms/jinya-backup:latest"
+                                withDockerRegistry(credentialsId: 'nexus.imanuel.dev', url: 'https://registry-hosted.imanuel.dev') {
+                                    sh "docker push registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER"
+                                }
+                                withDockerRegistry(credentialsId: 'hub.docker.com', url: '') {
+                                    sh "docker push jinyacms/jinya-backup:$BUILD_NUMBER"
+                                    sh "docker push jinyacms/jinya-backup:latest"
+                                }
                             }
                         }
                     }
