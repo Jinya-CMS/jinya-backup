@@ -37,10 +37,12 @@ spec:
                 stage('Build CGO worker') {
                     steps {
                         container('golang') {
-                            sh "go build -o jinya-backup-worker-cgo ./worker"
-                            archiveArtifacts artifacts: 'jinya-backup-worker-cgo', followSymlinks: false
-                            sh "CGO_ENABLED=0 go build -o jinya-backup-worker-nocgo ./worker"
-                            archiveArtifacts artifacts: 'jinya-backup-worker-nocgo', followSymlinks: false
+                            dir('./worker') {
+                                sh "go build -o jinya-backup-worker-cgo ."
+                                archiveArtifacts artifacts: 'jinya-backup-worker-cgo', followSymlinks: false
+                                sh "CGO_ENABLED=0 go build -o jinya-backup-worker-nocgo ."
+                                archiveArtifacts artifacts: 'jinya-backup-worker-nocgo', followSymlinks: false
+                            }
                         }
                     }
                 }
