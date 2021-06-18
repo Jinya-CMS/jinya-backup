@@ -38,10 +38,14 @@ spec:
                     steps {
                         container('golang') {
                             dir('./worker') {
-                                sh "go build -o jinya-backup-worker-cgo ."
-                                archiveArtifacts artifacts: 'jinya-backup-worker-cgo', followSymlinks: false
-                                sh "CGO_ENABLED=0 go build -o jinya-backup-worker-nocgo ."
-                                archiveArtifacts artifacts: 'jinya-backup-worker-nocgo', followSymlinks: false
+                                sh "wget https://www.musl-libc.org/releases/musl-latest.tar.gz"
+                                sh "tar -xvf musl-latest.tar.gz"
+                                sh "cd musl-latest"
+                                sh "./configure"
+                                sh "make"
+                                sh "sudo make install"
+                                sh "CC=/usr/local/musl/bin/musl-gcc go build --ldflags '-linkmode external -extldflags "-static"' -o jinya-backup-worker ."
+                                archiveArtifacts artifacts: 'jinya-backup-worker', followSymlinks: false
                             }
                         }
                     }
@@ -50,7 +54,7 @@ spec:
                     steps {
                         container('docker') {
                             dir('./server') {
-                                sh "docker build -t registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER -f ./Dockerfile ."
+                                sh "docker build -t registry-hosted.imanuel.dev/jinya/jinya-backup:shBUILD_NUMBER -f ./Dockerfile ."
                                 sh "docker tag registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:$BUILD_NUMBER"
                                 sh "docker tag registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:latest"
 
