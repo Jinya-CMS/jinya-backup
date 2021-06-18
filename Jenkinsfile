@@ -38,9 +38,9 @@ spec:
                     steps {
                         container('golang') {
                             dir('./worker') {
-                                sh "wget https://www.musl-libc.org/releases/musl-latest.tar.gz"
-                                sh "tar -xvf musl-latest.tar.gz"
-                                sh "cd musl-latest"
+                                sh "wget https://www.musl-libc.org/releases/musl-1.2.2.tar.gz"
+                                sh "tar -xvf musl-1.2.2.tar.gz"
+                                sh "cd musl-1.2.2"
                                 sh "./configure"
                                 sh "make"
                                 sh "sudo make install"
