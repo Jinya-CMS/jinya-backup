@@ -40,10 +40,11 @@ spec:
                             dir('./worker') {
                                 sh "wget https://www.musl-libc.org/releases/musl-1.2.2.tar.gz"
                                 sh "tar -xvf musl-1.2.2.tar.gz"
-                                sh "cd musl-1.2.2"
-                                sh "./configure"
-                                sh "make"
-                                sh "sudo make install"
+                                dir ('./musl-1.2.2') {
+                                    sh "./configure"
+                                    sh "make"
+                                    sh "sudo make install"
+                                }
                                 sh "CC=/usr/local/musl/bin/musl-gcc go build --ldflags '-linkmode external -extldflags \"-static\"' -o jinya-backup-worker ."
                                 archiveArtifacts artifacts: 'jinya-backup-worker', followSymlinks: false
                             }
