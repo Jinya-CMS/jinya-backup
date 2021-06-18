@@ -43,7 +43,7 @@ spec:
                                 dir ('./musl-1.2.2') {
                                     sh "./configure"
                                     sh "make"
-                                    sh "sudo make install"
+                                    sh "make install"
                                 }
                                 sh "CC=/usr/local/musl/bin/musl-gcc go build --ldflags '-linkmode external -extldflags \"-static\"' -o jinya-backup-worker ."
                                 archiveArtifacts artifacts: 'jinya-backup-worker', followSymlinks: false
@@ -55,7 +55,7 @@ spec:
                     steps {
                         container('docker') {
                             dir('./server') {
-                                sh "docker build -t registry-hosted.imanuel.dev/jinya/jinya-backup:shBUILD_NUMBER -f ./Dockerfile ."
+                                sh "docker build -t registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER -f ./Dockerfile ."
                                 sh "docker tag registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:$BUILD_NUMBER"
                                 sh "docker tag registry-hosted.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:latest"
 
