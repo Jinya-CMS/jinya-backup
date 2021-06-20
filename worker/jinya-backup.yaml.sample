@@ -1,0 +1,15 @@
+server: http://localhost:8899/
+jobs:
+  - id: e9bc5e32-def7-45fc-94be-15af91330b67
+    output: /backups/database.sql
+    host: 127.0.0.1
+    port: 3306
+    user: jinya
+    pass: jinya
+    database: jinya
+    type: mysqldump
+
+  - id: 8def6810-623b-4747-a84d-d1329f77a809
+    input: /data/
+    output: /backups/data.tar.gz
+    type: archive
