@@ -15,12 +15,12 @@ spec:
         path: /var/run/docker.sock
   containers:
   - name: golang
-    image: golang:latest
+    image: quay.imanuel.dev/dockerhub/library---golang:latest
     command:
     - cat
     tty: true
   - name: docker
-    image: docker:latest
+    image: quay.imanuel.dev/dockerhub/library---docker:stable
     command:
     - cat
     tty: true

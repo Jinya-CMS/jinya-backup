@@ -1,4 +1,4 @@
-FROM dart:stable AS build
+FROM quay.imanuel.dev/dockerhub/library---dart:stable AS build
 
 # Resolve app dependencies.
 WORKDIR /app
@@ -12,7 +12,7 @@ RUN dart pub get --offline
 RUN dart compile exe bin/server.dart -o bin/server
 RUN dart compile exe bin/console.dart -o bin/console
 
-FROM alpine
+FROM quay.imanuel.dev/dockerhub/library---alpine:latest
 COPY --from=build /runtime/ /
 COPY --from=build /app/bin/server /bin/
 COPY --from=build /app/bin/console /bin/
