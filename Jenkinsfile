@@ -55,17 +55,17 @@ spec:
                     steps {
                         container('docker') {
                             dir('./server') {
-                                sh "docker build -t quay.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER -f ./Dockerfile ."
-                                sh "docker tag quay.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER quay.imanuel.dev/jinya/jinya-backup:latest"
-                                sh "docker tag quay.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:$BUILD_NUMBER"
-                                sh "docker tag quay.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER jinyacms/jinya-backup:latest"
+                                sh "docker build -t quay.imanuel.dev/jinya/jinya-backup:v1.$BUILD_NUMBER -f ./Dockerfile ."
+                                sh "docker tag quay.imanuel.dev/jinya/jinya-backup:v1.$BUILD_NUMBER quay.imanuel.dev/jinya/jinya-backup:latest"
+                                sh "docker tag quay.imanuel.dev/jinya/jinya-backup:v1.$BUILD_NUMBER jinyacms/jinya-backup:v1.$BUILD_NUMBER"
+                                sh "docker tag quay.imanuel.dev/jinya/jinya-backup:v1.$BUILD_NUMBER jinyacms/jinya-backup:latest"
 
                                 withDockerRegistry(credentialsId: 'quay.imanuel.dev', url: 'https://quay.imanuel.dev') {
-                                    sh "docker push quay.imanuel.dev/jinya/jinya-backup:$BUILD_NUMBER"
+                                    sh "docker push quay.imanuel.dev/jinya/jinya-backup:v1.$BUILD_NUMBER"
                                     sh "docker push quay.imanuel.dev/jinya/jinya-backup:latest"
                                 }
                                 withDockerRegistry(credentialsId: 'hub.docker.com', url: '') {
-                                    sh "docker push jinyacms/jinya-backup:$BUILD_NUMBER"
+                                    sh "docker push jinyacms/jinya-backup:v1.$BUILD_NUMBER"
                                     sh "docker push jinyacms/jinya-backup:latest"
                                 }
                             }
