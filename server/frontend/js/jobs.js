@@ -1,4 +1,4 @@
-import {confirm, displayModal, pageBody, request, resetContent, resetListClass} from "./utils.js";
+import {confirm, displayModal, pageBody, request, resetContent, resetListClass,} from "./utils.js";
 
 let jobs;
 const jobDetailTemplate = Handlebars.compile(document.getElementById('jobItemDetailsTemplate').innerHTML);

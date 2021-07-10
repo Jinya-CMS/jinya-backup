@@ -1,7 +1,17 @@
+import {displayJobs} from "./jobs.js";
+import {displayUsers} from "./users.js";
+
 export const pageBody = document.querySelector('[data-role=page-body]');
 
-export function resetContent() {
+export function resetContent(login = false) {
     pageBody.innerHTML = "";
+    if (login) {
+        document.querySelector('[data-menu=login]').classList.remove('jinya-hidden');
+        document.querySelector('[data-menu=app]').classList.add('jinya-hidden');
+    } else {
+        document.querySelector('[data-menu=login]').classList.add('jinya-hidden');
+        document.querySelector('[data-menu=app]').classList.remove('jinya-hidden');
+    }
 }
 
 export async function request(url, method, body = {}) {
@@ -65,4 +75,27 @@ export function resetListClass() {
 
 export function resetTabClass() {
     document.querySelectorAll('.cosmo-tab-control__tab-link--active').forEach(item => item.classList.remove('cosmo-tab-control__tab-link--active'));
+}
+
+export function resetMenuClass() {
+    document.querySelectorAll('.cosmo-menu-bar__main-item--active').forEach(item => item.classList.remove('cosmo-menu-bar__main-item--active'));
+}
+
+export function initMenuNavigation() {
+    document.querySelector('[data-menu-item=backups]').addEventListener('click', async (e) => {
+        e.preventDefault();
+        resetMenuClass();
+        e.target.classList.add('cosmo-menu-bar__main-item--active');
+        await displayJobs();
+    });
+    document.querySelector('[data-menu-item=users]').addEventListener('click', async (e) => {
+        e.preventDefault();
+        resetMenuClass();
+        e.target.classList.add('cosmo-menu-bar__main-item--active');
+        await displayUsers();
+    });
+    if (window.location.hash === '#users') {
+        resetMenuClass();
+        document.querySelector('[data-menu-item=users]').classList.add('cosmo-menu-bar__main-item--active');
+    }
 }

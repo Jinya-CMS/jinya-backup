@@ -1,7 +1,8 @@
 import {pageBody, request, resetContent} from "./utils.js";
+import {displayJobs} from "./jobs.js";
 
 export function displayLogin() {
-    resetContent();
+    resetContent(true);
     document.querySelector('[data-menu=login]').classList.remove('jinya-hidden');
     document.querySelector('[data-menu=app]').classList.add('jinya-hidden');
     const loginTemplate = Handlebars.compile(document.getElementById('loginTemplate').innerHTML);
