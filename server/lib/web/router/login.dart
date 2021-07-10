@@ -31,6 +31,8 @@ class LoginRouter {
                 await token.delete();
 
                 return Response(204);
-              }));
+              }))
+      ..head('/',
+          (Request request) => authenticated(request, (u, t) => Response(204)));
   }
 }
