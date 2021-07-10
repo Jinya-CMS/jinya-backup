@@ -17,6 +17,7 @@ COPY --from=build /runtime/ /
 COPY --from=build /app/bin/server /bin/
 COPY --from=build /app/bin/console /bin/
 COPY --from=build /app/docker/entrypoint.sh /
+COPY --from=build /app/frontend /frontend
 
 # Start server.
 ENTRYPOINT "/entrypoint.sh"
