@@ -3,375 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage Jinya Backup</title>
-    <link rel="stylesheet" href="semantic/dist/semantic.min.css">
+    <link href="node_modules/@jinyacms/cosmo/variables.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/lato.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/scrollbars.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/layout.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/form.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/modal.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/progress.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/list.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/toolbar.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/typography.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/tab.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/table.css" rel="stylesheet">
+    <link href="node_modules/@jinyacms/cosmo/key-value-list.css" rel="stylesheet">
+    <link href="css/jinya.css" rel="stylesheet">
 </head>
 <body>
-<nav class="ui top attached inverted teal menu">
-    <div class="ui container" style="padding-right: 5%; padding-left: 5%; width: unset; margin: 0;">
-        <span class="header item">Jinya Backup</span>
-        <a class="item" data-action="users" href="#users">Users</a>
-        <a class="item" data-action="jobs" href="#jobs">Backup Jobs</a>
+<main class="cosmo-page-layout jinya-hidden">
+    <div class="cosmo-top-bar">
+        <div class="cosmo-profile-picture"></div>
+        <a class="cosmo-top-bar__menu-item jinya-top-bar__menu-item--logout" data-action="logout">Logout</a>
     </div>
-</nav>
-<div style="margin-top: 40px; padding-left: 5%; padding-right: 5%">
-    <div class="ui teal segment" data-role="content">
-    </div>
-</div>
-<form class="ui modal" data-role="login-modal">
-    <div class="header">
-        Login
-    </div>
-    <div class="content">
-        <div class="ui form" data-role="login-form">
-            <div class="ui error message">
-                <div class="header">Wrong credentials</div>
-                <p>You entered wrong credentials, please check them and try again.</p>
+    <div class="cosmo-menu-bar">
+        <div class="cosmo-menu-bar__touch"></div>
+        <button class="cosmo-menu-bar__back-button" disabled type="button"></button>
+        <nav class="cosmo-menu-bar__menu-collection" data-menu="login">
+            <div class="cosmo-menu-bar__main-menu">
+                <span class="cosmo-menu-bar__main-item cosmo-menu-bar__main-item--active">Login</span>
             </div>
-            <div class="field">
+        </nav>
+        <nav class="cosmo-menu-bar__menu-collection" data-menu="app">
+            <div class="cosmo-menu-bar__main-menu">
+                <a class="cosmo-menu-bar__main-item cosmo-menu-bar__main-item--active" data-menu-item="backups"
+                   href="#backups">Backup Jobs</a>
+                <a class="cosmo-menu-bar__main-item" data-menu-item="users" href="#users">Users</a>
+            </div>
+        </nav>
+    </div>
+    <div class="cosmo-page-body" data-role="page-body"></div>
+</main>
+
+<template id="loginTemplate">
+    <form id="loginForm">
+        <div class="cosmo-input__group">
+            <label class="cosmo-label" for="username">Username</label>
+            <input class="cosmo-input" id="username" required type="text">
+            <label class="cosmo-label" for="password">Password</label>
+            <input class="cosmo-input" id="password" required type="password">
+        </div>
+        <div class="cosmo-button__container">
+            <button class="cosmo-button" data-action="login" type="submit">Login</button>
+        </div>
+    </form>
+</template>
+<template id="jobListTemplate">
+    <div class="cosmo-page-body__content">
+        <div class="cosmo-list">
+            <nav class="cosmo-list__items">
+                {{#jobs}}
+                <a class="cosmo-list__item" data-action="change-job" data-job-id="{{id}}">{{name}}</a>
+                {{/jobs}}
+                <button class="cosmo-button cosmo-button--full-width" data-action="add-job">Create Job</button>
+            </nav>
+            <div class="cosmo-list__content">
+            </div>
+        </div>
+    </div>
+</template>
+<script id="jobItemDetailsTemplate" type="text/x-handlebars-template">
+    <div class="cosmo-tab-control">
+        <div class="cosmo-tab-control__tabs">
+            <a data-action="details" class="cosmo-tab-control__tab-link cosmo-tab-control__tab-link--active">Details</a>
+            <a data-action="backups" class="cosmo-tab-control__tab-link">Backups</a>
+        </div>
+        <div class="cosmo-tab-control__content" data-content-type="details">
+            <div class="cosmo-toolbar">
+                <div class="cosmo-toolbar__group">
+                    <button type="button" data-id="{{id}}" class="cosmo-button" data-action="edit-job">Edit</button>
+                </div>
+                <div class="cosmo-toolbar__group">
+                    <button type="button" data-id="{{id}}" class="cosmo-button" data-action="delete-job">Delete</button>
+                </div>
+            </div>
+            <span class="cosmo-title">{{job.name}}</span>
+            <dl class="cosmo-key-value-list">
+                <dt class="cosmo-key-value-list__key">ID</dt>
+                <dd class="cosmo-key-value-list__value">{{job.id}}</dd>
+                <dt class="cosmo-key-value-list__key">Host</dt>
+                <dd class="cosmo-key-value-list__value">{{job.host}}</dd>
+                <dt class="cosmo-key-value-list__key">Port</dt>
+                <dd class="cosmo-key-value-list__value">{{job.port}}</dd>
+                <dt class="cosmo-key-value-list__key">Remote path</dt>
+                <dd class="cosmo-key-value-list__value">{{job.remotePath}}</dd>
+                <dt class="cosmo-key-value-list__key">Local path</dt>
+                <dd class="cosmo-key-value-list__value">{{job.localPath}}</dd>
+            </dl>
+        </div>
+        <div class="cosmo-tab-control__content jinya-hidden" data-content-type="backups">
+            <table class="cosmo-table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Backup Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each backups}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{name}}</td>
+                    <td>{{formatDate backupDate}}</td>
+                    <td>
+                        <div class="cosmo-toolbar__group">
+                            <a target="_blank" href="/api/backup-job/{{job.id}}/backup/{{id}}"
+                               class="cosmo-button">Download</a>
+                            <button type="button" data-job-id="{{job.id}}" data-id="{{id}}" class="cosmo-button"
+                                    data-action="delete-backup">Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+<template id="createJobTemplate">
+    <form class="cosmo-modal" data-role="add-job-modal">
+        <h1 class="cosmo-modal__title">Add FTP job</h1>
+        <div class="cosmo-modal__content">
+            <div class="cosmo-input__group">
+                <label class="cosmo-label" for="name">Name</label>
+                <input class="cosmo-input" id="name" placeholder="Name" required type="text">
+                <label class="cosmo-label" for="host">Host</label>
+                <input class="cosmo-input" id="host" placeholder="Host" required type="text">
+                <label class="cosmo-label" for="port">Port</label>
+                <input class="cosmo-input" id="port" placeholder="Port" required type="number">
+                <label class="cosmo-label" for="username">Username</label>
+                <input class="cosmo-input" id="username" placeholder="Username" required type="text">
+                <label class="cosmo-label" for="password">Password</label>
+                <input class="cosmo-input" id="password" placeholder="Password" required type="password">
+                <label class="cosmo-label" for="remotePath">Remote path</label>
+                <input class="cosmo-input" id="remotePath" placeholder="Remote path" required type="text">
+                <label class="cosmo-label" for="localPath">Local path</label>
+                <input class="cosmo-input" id="localPath" placeholder="Local path" required type="text">
+            </div>
+        </div>
+        <div class="cosmo-modal__button-bar">
+            <button class="cosmo-button" type="submit">Save job</button>
+            <button class="cosmo-button" data-role="cancel-job-modal" type="button">Cancel</button>
+        </div>
+    </form>
+</template>
+<template id="editJobTemplate">
+    <form class="cosmo-modal" data-role="edit-job-modal">
+        <h1 class="cosmo-modal__title">Edit FTP job</h1>
+        <div class="cosmo-modal__content">
+            <div class="cosmo-input__group">
+                <label class="cosmo-label" for="name">Name</label>
+                <input class="cosmo-input" id="name" placeholder="Name" required type="text" value="{{name}}">
+                <label class="cosmo-label" for="host">Host</label>
+                <input class="cosmo-input" id="host" placeholder="Host" required type="text" value="{{host}}">
+                <label class="cosmo-label" for="port">Port</label>
+                <input class="cosmo-input" id="port" placeholder="Port" required type="number" value="{{port}}">
+                <label class="cosmo-label" for="username">Username</label>
+                <input class="cosmo-input" id="username" placeholder="Username" required type="text"
+                       value="{{username}}">
+                <label class="cosmo-label" for="password">Password</label>
+                <input class="cosmo-input" id="password" placeholder="Password" type="password" value="{{password}}">
+                <label class="cosmo-label" for="remotePath">Remote path</label>
+                <input class="cosmo-input" id="remotePath" placeholder="Remote path" required type="text"
+                       value="{{remotePath}}">
+                <label class="cosmo-label" for="localPath">Local path</label>
+                <input class="cosmo-input" id="localPath" placeholder="Local path" required type="text"
+                       value="{{localPath}}">
+            </div>
+        </div>
+        <div class="cosmo-modal__button-bar">
+            <button class="cosmo-button" type="submit">Save job</button>
+            <button class="cosmo-button" data-role="cancel-job-modal" type="button">Cancel</button>
+        </div>
+    </form>
+</template>
+
+<script id="userListTemplate" type="text/x-handlebars-template">
+    <div class="cosmo-page-body__content">
+        <div class="cosmo-toolbar">
+            <div class="cosmo-toolbar__group">
+                <button data-action="create-user" class="cosmo-button" type="button">Create user</button>
+            </div>
+        </div>
+        <table class="cosmo-table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each users}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>
+                    <div class="cosmo-toolbar__group">
+                        <button type="button" data-id="{{id}}" data-action="edit-user" class="cosmo-button">Edit
+                        </button>
+                        <button type="button" data-id="{{id}}" class="cosmo-button" data-action="delete-user">Delete
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</script>
+<template id="addUserTemplate">
+    <form class="cosmo-modal" data-role="add-user-modal">
+        <div class="cosmo-modal__title">Add user</div>
+        <div class="cosmo-modal__content">
+            <div class="cosmo-input__group" data-role="login-form">
                 <label for="username">Username</label>
-                <input id="username" type="text" name="username" placeholder="Username">
-            </div>
-            <div class="field">
+                <input id="username" name="username" placeholder="Username" required type="text">
                 <label for="password">Password</label>
-                <input id="password" type="password" name="password" placeholder="Password">
+                <input id="password" name="password" placeholder="Password" required type="password">
             </div>
         </div>
-    </div>
-    <div class="actions">
-        <button type="button" class="ui black deny button" onclick="window.close()">
-            Cancel
-        </button>
-        <button type="submit" class="ui positive right labeled icon button">
-            Login
-            <i class="checkmark icon"></i>
-        </button>
-    </div>
-</form>
-<form class="ui modal" data-role="add-user-modal">
-    <div class="header">
-        Add user
-    </div>
-    <div class="content">
-        <div class="ui form" data-role="login-form">
-            <div class="field">
-                <label for="add_username">Username</label>
-                <input required id="add_username" type="text" name="username" placeholder="Username">
-            </div>
-            <div class="field">
-                <label for="add_password">Password</label>
-                <input required id="add_password" type="password" name="password" placeholder="Password">
+        <div class="cosmo-modal__button-bar">
+            <button class="cosmo-button" type="submit">Save user</button>
+            <button class="cosmo-button" data-action="cancel-modal" type="button">Cancel</button>
+        </div>
+    </form>
+</template>
+<template id="editUserTemplate">
+    <form class="cosmo-modal" data-role="edit-user-modal">
+        <div class="cosmo-modal__title">Edit user</div>
+        <div class="cosmo-modal__content">
+            <div class="cosmo-input__group">
+                <label for="username">Username</label>
+                <input autocomplete="false" id="username" name="username" placeholder="Username" required type="text"
+                       value="{{name}}">
+                <label for="password">Password</label>
+                <input autocomplete="false" id="password" name="password" placeholder="Password" required
+                       type="password">
             </div>
         </div>
-    </div>
-    <div class="actions">
-        <button type="button" class="ui black deny button">
-            Cancel
-        </button>
-        <button type="submit" class="ui positive right labeled icon button">
-            Save user
-            <i class="checkmark icon"></i>
-        </button>
-    </div>
-</form>
-<form class="ui modal" data-role="edit-user-modal">
-    <div class="header">
-        Edit user
-    </div>
-    <div class="content">
-        <div class="ui form" data-role="login-form">
-            <div class="field">
-                <label for="edit_username">Username</label>
-                <input required id="edit_username" type="text" name="username" placeholder="Username">
-            </div>
-            <div class="field">
-                <label for="edit_password">Password</label>
-                <input id="edit_password" type="password" name="password" placeholder="Password">
-            </div>
+        <div class="cosmo-modal__button-bar">
+            <button class="cosmo-button" type="submit">Save user</button>
+            <button class="cosmo-button" data-action="cancel-modal" type="button">Cancel</button>
         </div>
-    </div>
-    <div class="actions">
-        <button type="button" class="ui black deny button">
-            Cancel
-        </button>
-        <button type="submit" class="ui positive right labeled icon button">
-            Save user
-            <i class="checkmark icon"></i>
-        </button>
-    </div>
-</form>
-<form class="ui modal" data-role="add-job-modal">
-    <div class="header">
-        Add FTP job
-    </div>
-    <div class="content">
-        <div class="ui form" data-role="login-form">
-            <div class="field">
-                <label for="add_name">Name</label>
-                <input required id="add_name" type="text" name="name" placeholder="Name">
-            </div>
-            <div class="field">
-                <label for="add_host">Host</label>
-                <input required id="add_host" type="text" name="host" placeholder="Host">
-            </div>
-            <div class="field">
-                <label for="add_port">Port</label>
-                <input required id="add_port" type="text" name="port" placeholder="Port">
-            </div>
-            <div class="field">
-                <label for="add_ftp_username">Username</label>
-                <input required id="add_ftp_username" type="text" name="username" placeholder="Username">
-            </div>
-            <div class="field">
-                <label for="add_ftp_password">Password</label>
-                <input required id="add_ftp_password" type="password" name="password" placeholder="Password">
-            </div>
-            <div class="field">
-                <label for="add_ftp_remote_path">Remote path</label>
-                <input required id="add_ftp_remote_path" type="text" name="remote_path" placeholder="Remote path">
-            </div>
-            <div class="field">
-                <label for="add_ftp_local_path">Local path</label>
-                <input required id="add_ftp_local_path" type="text" name="local_path" placeholder="Local path">
-            </div>
-        </div>
-    </div>
-    <div class="actions">
-        <button type="button" class="ui black deny button">
-            Cancel
-        </button>
-        <button type="submit" class="ui positive right labeled icon button">
-            Save job
-            <i class="checkmark icon"></i>
-        </button>
-    </div>
-</form>
-<form class="ui modal" data-role="edit-job-modal">
-    <div class="header">
-        Edit FTP job
-    </div>
-    <div class="content">
-        <div class="ui form" data-role="login-form">
-            <div class="field">
-                <label for="edit_name">Name</label>
-                <input required id="edit_name" type="text" name="name" placeholder="Name">
-            </div>
-            <div class="field">
-                <label for="edit_host">Host</label>
-                <input required id="edit_host" type="text" name="host" placeholder="Host">
-            </div>
-            <div class="field">
-                <label for="edit_port">Port</label>
-                <input required id="edit_port" type="text" name="port" placeholder="Port">
-            </div>
-            <div class="field">
-                <label for="edit_ftp_username">Username</label>
-                <input required id="edit_ftp_username" type="text" name="username" placeholder="Username">
-            </div>
-            <div class="field">
-                <label for="edit_ftp_password">Password</label>
-                <input id="edit_ftp_password" type="password" name="password" placeholder="Password">
-            </div>
-            <div class="field">
-                <label for="edit_ftp_remote_path">Remote path</label>
-                <input required id="edit_ftp_remote_path" type="text" name="remote_path" placeholder="Remote path">
-            </div>
-            <div class="field">
-                <label for="edit_ftp_local_path">Local path</label>
-                <input required id="edit_ftp_local_path" type="text" name="local_path" placeholder="Local path">
-            </div>
-        </div>
-    </div>
-    <div class="actions">
-        <button type="button" class="ui black deny button">
-            Cancel
-        </button>
-        <button type="submit" class="ui positive right labeled icon button">
-            Save job
-            <i class="checkmark icon"></i>
-        </button>
-    </div>
-</form>
-<div class="ui basic modal" data-role="delete-user-modal">
-    <div class="ui icon header">
-        <i class="delete icon"></i>
-        Delete user
-    </div>
-    <div class="content">
-        <p>Do you want to delete the user?</p>
-    </div>
-    <div class="actions">
-        <button class="ui red basic cancel inverted button">
-            <i class="remove icon"></i>
-            No
-        </button>
-        <button data-action="delete" class="ui green ok inverted button">
-            <i class="checkmark icon"></i>
-            Yes
-        </button>
-    </div>
-</div>
-<div class="ui basic modal" data-role="delete-job-modal">
-    <div class="ui icon header">
-        <i class="delete icon"></i>
-        Delete job
-    </div>
-    <div class="content">
-        <p>Do you want to delete the job?</p>
-    </div>
-    <div class="actions">
-        <button class="ui red basic cancel inverted button">
-            <i class="remove icon"></i>
-            No
-        </button>
-        <button data-action="delete" class="ui green ok inverted button">
-            <i class="checkmark icon"></i>
-            Yes
-        </button>
-    </div>
-</div>
-<div class="ui basic modal" data-role="delete-backup-modal">
-    <div class="ui icon header">
-        <i class="delete icon"></i>
-        Delete backup
-    </div>
-    <div class="content">
-        <p>Do you want to delete the backup?</p>
-    </div>
-    <div class="actions">
-        <button class="ui red basic cancel inverted button">
-            <i class="remove icon"></i>
-            No
-        </button>
-        <button data-action="delete" class="ui green ok inverted button">
-            <i class="checkmark icon"></i>
-            Yes
-        </button>
-    </div>
-</div>
-<script id="users" type="text/x-handlebars-template">
-    <button class="ui primary button" data-action="add">
-        Create user
-    </button>
-    <table class="ui table">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#users}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{name}}</td>
-                <td>
-                    <div data-id="{{id}}" class="ui animated small teal button" data-action="edit">
-                        <div class="visible content">Edit</div>
-                        <div class="hidden content">
-                            <i class="ui pen icon"></i>
-                        </div>
-                    </div>
-                    <div data-id="{{id}}" class="ui animated small negative button" data-action="delete">
-                        <div class="visible content">Delete</div>
-                        <div class="hidden content">
-                            <i class="trash icon"></i>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        {{/users}}
-        </tbody>
-    </table>
-</script>
-<script id="jobs" type="text/x-handlebars-template">
-    <button class="ui primary button" data-action="add">
-        Create job
-    </button>
-    <table class="ui table">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Host</th>
-            <th>Port</th>
-            <th>Type</th>
-            <th>Remote path</th>
-            <th>Local path</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#jobs}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{name}}</td>
-                <td>{{host}}</td>
-                <td>{{port}}</td>
-                <td>{{type}}</td>
-                <td>{{remotePath}}</td>
-                <td>{{localPath}}</td>
-                <td>
-                    <div data-id="{{id}}" class="ui small teal button" data-action="backups">Backups</div>
-                    <div data-id="{{id}}" class="ui animated small teal button" data-action="edit">
-                        <div class="visible content">Edit</div>
-                        <div class="hidden content">
-                            <i class="ui pen icon"></i>
-                        </div>
-                    </div>
-                    <div data-id="{{id}}" class="ui animated small negative button" data-action="delete">
-                        <div class="visible content">Delete</div>
-                        <div class="hidden content">
-                            <i class="trash icon"></i>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        {{/jobs}}
-        </tbody>
-    </table>
-</script>
-<script id="backups" type="text/x-handlebars-template">
-    <table class="ui table">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Path</th>
-            <th>Backup Date</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#backups}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{name}}</td>
-                <td>{{fullPath}}</td>
-                <td>{{backupDate}}</td>
-                <td>
-                    <a target="_blank" href="/api/backup-job/backup/backup/{{id}}" data-id="{{id}}"
-                       class="ui animated small teal button">
-                        <span class="visible content">Download</span>
-                        <span class="hidden content">
-                            <i class="download icon"></i>
-                        </span>
-                    </a>
-                    <div data-id="{{id}}" class="ui animated small negative button" data-action="delete">
-                        <div class="visible content">Delete</div>
-                        <div class="hidden content">
-                            <i class="trash icon"></i>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        {{/backups}}
-        </tbody>
-    </table>
-</script>
-<script src="lib/js/jquery.min.js"></script>
-<script src="lib/js/handlebars.min.js"></script>
-<script src="semantic/dist/semantic.min.js"></script>
-<script src="js/index.js"></script>
+    </form>
+</template>
+<script src="lib/js/handlebars.js"></script>
+<script src="js/index.js" type="module"></script>
 </body>
 </html>

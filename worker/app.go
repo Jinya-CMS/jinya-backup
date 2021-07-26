@@ -206,7 +206,7 @@ func main() {
 	}
 
 	var (
-		jobChan = make(chan Job)
+		jobChan = make(chan Job, len(config.Jobs))
 		logChan = make(chan string)
 		wg      = &sync.WaitGroup{}
 	)
