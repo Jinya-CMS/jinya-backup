@@ -11,7 +11,6 @@ void _writeDotEnv(String host, String port, String user, String password,
     String database) async {
   final dotEnvFile = File(Directory.current.absolute.path + '/.env');
   final secretKey = await Chacha20.poly1305Aead().newSecretKey();
-  final nonce = Chacha20.poly1305Aead().newNonce();
 
   final envVars = [
     'DB_HOST=$host',
@@ -20,7 +19,6 @@ void _writeDotEnv(String host, String port, String user, String password,
     'DB_PASSWORD=$password',
     'DB_DATABASE=$database',
     'DB_SECRET_KEY=${env['DB_SECRET_KEY'] ?? base64Encode(await secretKey.extractBytes())}',
-    'DB_SECRET_NONCE=${env['DB_SECRET_NONCE'] ?? base64Encode(nonce)}',
   ];
   await dotEnvFile.writeAsString(envVars.join('\n'));
 }
@@ -82,7 +80,8 @@ void main(List<String> args) async {
           username text not null default '',
           password text not null default '',
           remote_path text not null,
-          local_path text not null
+          local_path text not null,
+          nonce text not null
         )
         ''');
       // language=sql

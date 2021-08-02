@@ -15,13 +15,10 @@ class BackupJob {
   String? type;
   String? username;
   String? _password;
+  String? _nonce;
 
   SecretKey _getSecretKey() {
     return SecretKey(base64Decode(env['DB_SECRET_KEY']!));
-  }
-
-  List<int> _getNonce() {
-    return base64Decode(env['DB_SECRET_NONCE']!);
   }
 
   Future<Mac> _getMac() async {
@@ -32,7 +29,7 @@ class BackupJob {
   Future<String> getPassword() async {
     final cipherText = await Chacha20.poly1305Aead().decrypt(
       SecretBox(base64Decode(_password!),
-          nonce: _getNonce(), mac: await _getMac()),
+          nonce: base64Decode(_nonce!), mac: await _getMac()),
       secretKey: _getSecretKey(),
     );
 
@@ -43,9 +40,9 @@ class BackupJob {
     final cipherText = await Chacha20.poly1305Aead().encrypt(
       utf8.encode(password),
       secretKey: _getSecretKey(),
-      nonce: _getNonce(),
     );
     _password = base64Encode(cipherText.cipherText);
+    _nonce = base64Encode(cipherText.nonce);
   }
 
   String? remotePath;
@@ -62,6 +59,7 @@ class BackupJob {
     job.localPath = data['backup_job']['local_path'];
     job.name = data['backup_job']['name'];
     job.id = data['backup_job']['id'];
+    job._nonce = data['backup_job']['nonce'];
 
     return job;
   }
@@ -71,7 +69,7 @@ class BackupJob {
     await connection.open();
     try {
       final result = await connection.mappedResultsQuery(
-          'SELECT id, name, host, port, type, username, password, remote_path, local_path FROM "backup_job" WHERE id=@id',
+          'SELECT id, name, host, port, type, username, password, remote_path, local_path, nonce FROM "backup_job" WHERE id=@id',
           substitutionValues: {'id': id});
 
       if (result.isEmpty) {
@@ -89,7 +87,7 @@ class BackupJob {
     await connection.open();
     try {
       final result = await connection.mappedResultsQuery(
-          'SELECT id, name, host, port, type, username, password, remote_path, local_path FROM "backup_job"');
+          'SELECT id, name, host, port, type, username, password, remote_path, local_path, nonce FROM "backup_job"');
 
       final jobs = <BackupJob>[];
       for (final row in result) {
@@ -107,7 +105,7 @@ class BackupJob {
     await connection.open();
     try {
       await connection.execute(
-          'INSERT INTO "backup_job" (name, host, port, type, username, password, remote_path, local_path) VALUES (@name, @host, @port, @type, @username, @password, @remote_path, @local_path)',
+          'INSERT INTO "backup_job" (name, host, port, type, username, password, remote_path, local_path, nonce) VALUES (@name, @host, @port, @type, @username, @password, @remote_path, @local_path, @nonce)',
           substitutionValues: {
             'name': name,
             'host': host,
@@ -117,6 +115,7 @@ class BackupJob {
             'username': username,
             'remote_path': remotePath,
             'local_path': localPath,
+            'nonce': _nonce,
           });
       final directory = Directory(localPath!);
       if (!await directory.exists()) {
@@ -132,7 +131,7 @@ class BackupJob {
     await connection.open();
     try {
       await connection.execute(
-          'UPDATE "backup_job" SET name=@name, host=@host, port=@port, type=@type, username=@username, remote_path=@remote_path, local_path=@local_path, password=@password WHERE id=@id',
+          'UPDATE "backup_job" SET name=@name, host=@host, port=@port, type=@type, username=@username, remote_path=@remote_path, local_path=@local_path, password=@password, nonce=@nonce WHERE id=@id',
           substitutionValues: {
             'id': id,
             'name': name,
@@ -143,6 +142,7 @@ class BackupJob {
             'password': _password,
             'remote_path': remotePath,
             'local_path': localPath,
+            'nonce': _nonce,
           });
       final directory = Directory(localPath!);
       if (!await directory.exists()) {
