@@ -15,7 +15,7 @@ class BackupJob {
   String? type;
   String? username;
   String? _password;
-  String? _nonce;
+  String? _nonce = '';
 
   Uint8List _getSecretKey() {
     return base64Decode(env['DB_SECRET_KEY']!);
