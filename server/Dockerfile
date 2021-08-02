@@ -13,17 +13,14 @@ RUN dart compile exe bin/server.dart -o bin/server
 RUN dart compile exe bin/console.dart -o bin/console
 
 FROM quay.imanuel.dev/dockerhub/library---node:latest AS build-frontend
-WORKDIR /app
-COPY . .
-WORKDIR /app/frontend
-RUN yarn install
+COPY ./frontend /app/frontend
+RUN cd /app/frontend && npm install
 
 FROM quay.imanuel.dev/dockerhub/library---alpine:latest
 COPY --from=build /runtime/ /
 COPY --from=build /app/bin/server /bin/
 COPY --from=build /app/bin/console /bin/
 COPY --from=build /app/docker/entrypoint.sh /
-COPY --from=build /app/frontend /frontend
 COPY --from=build-frontend /app/frontend /frontend
 
 # Start server.
