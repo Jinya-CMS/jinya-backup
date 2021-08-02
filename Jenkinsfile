@@ -33,6 +33,9 @@ spec:
     }
     stages {
         stage('Build production') {
+            when {
+                branch 'main'
+            }
             parallel {
                 stage('Build CGO worker') {
                     steps {
