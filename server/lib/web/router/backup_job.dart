@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:dotenv/dotenv.dart';
@@ -10,7 +9,6 @@ import 'package:jinya_backup/database/models/backup_job.dart';
 import 'package:jinya_backup/database/models/stored_backup.dart';
 import 'package:jinya_backup/web/middleware/authenticated_middleware.dart';
 import 'package:path/path.dart';
-import 'package:pedantic/pedantic.dart' as pedantic;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:uuid/uuid.dart';
@@ -101,7 +99,7 @@ class BackupJobRouter {
               }))
       ..post('/<id>/backup', (Request request, String id) async {
         try {
-          pedantic.unawaited(Isolate.spawn(downloadFile, id));
+          await downloadFile(id);
 
           return Response(200);
         } catch (e) {

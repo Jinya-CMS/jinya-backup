@@ -19,3 +19,4 @@ dependencies:
   pedantic: ^1.11.0
   path: ^1.8.0
   mime_type: ^1.0.0
+  ninja: ^3.0.2

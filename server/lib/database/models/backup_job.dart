@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:cryptography/cryptography.dart';
-import 'package:cryptography/dart.dart';
 import 'package:dotenv/dotenv.dart';
 import 'package:jinya_backup/database/connection.dart';
 import 'package:jinya_backup/database/exceptions/no_result_exception.dart';
+import 'package:ninja/ninja.dart';
 
 class BackupJob {
   String? id;
@@ -17,32 +17,19 @@ class BackupJob {
   String? _password;
   String? _nonce;
 
-  SecretKey _getSecretKey() {
-    return SecretKey(base64Decode(env['DB_SECRET_KEY']!));
-  }
-
-  Future<Mac> _getMac() async {
-    return DartChacha20Poly1305AeadMacAlgorithm()
-        .calculateMac(base64Decode(_password!), secretKey: _getSecretKey());
+  Uint8List _getSecretKey() {
+    return base64Decode(env['DB_SECRET_KEY']!);
   }
 
   Future<String> getPassword() async {
-    final cipherText = await Chacha20.poly1305Aead().decrypt(
-      SecretBox(base64Decode(_password!),
-          nonce: base64Decode(_nonce!), mac: await _getMac()),
-      secretKey: _getSecretKey(),
-    );
+    final key = AESKey(_getSecretKey());
 
-    return utf8.decode(cipherText);
+    return key.decryptToUtf8(_password);
   }
 
   Future setPassword(String password) async {
-    final cipherText = await Chacha20.poly1305Aead().encrypt(
-      utf8.encode(password),
-      secretKey: _getSecretKey(),
-    );
-    _password = base64Encode(cipherText.cipherText);
-    _nonce = base64Encode(cipherText.nonce);
+    final key = AESKey(_getSecretKey());
+    _password = key.encryptToBase64(password);
   }
 
   String? remotePath;
