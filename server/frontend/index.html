@@ -43,7 +43,7 @@
     <div class="cosmo-page-body" data-role="page-body"></div>
 </main>
 
-<template id="loginTemplate">
+<script type="text/x-handlebars-template" id="loginTemplate">
     <form id="loginForm">
         <div class="cosmo-input__group">
             <label class="cosmo-label" for="username">Username</label>
@@ -55,8 +55,9 @@
             <button class="cosmo-button" data-action="login" type="submit">Login</button>
         </div>
     </form>
-</template>
-<template id="jobListTemplate">
+</script>
+
+<script type="text/x-handlebars-template" id="jobListTemplate">
     <div class="cosmo-page-body__content">
         <div class="cosmo-list">
             <nav class="cosmo-list__items">
@@ -69,8 +70,8 @@
             </div>
         </div>
     </div>
-</template>
-<script id="jobItemDetailsTemplate" type="text/x-handlebars-template">
+</script>
+<script type="text/x-handlebars-template" id="jobItemDetailsTemplate">
     <div class="cosmo-tab-control">
         <div class="cosmo-tab-control__tabs">
             <a data-action="details" class="cosmo-tab-control__tab-link cosmo-tab-control__tab-link--active">Details</a>
@@ -111,27 +112,27 @@
                 </thead>
                 <tbody>
                 {{#each backups}}
-                <tr>
-                    <td>{{id}}</td>
-                    <td>{{name}}</td>
-                    <td>{{formatDate backupDate}}</td>
-                    <td>
-                        <div class="cosmo-toolbar__group">
-                            <a target="_blank" href="/api/backup-job/{{job.id}}/backup/{{id}}"
-                               class="cosmo-button">Download</a>
-                            <button type="button" data-job-id="{{job.id}}" data-id="{{id}}" class="cosmo-button"
-                                    data-action="delete-backup">Delete
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>{{id}}</td>
+                        <td>{{name}}</td>
+                        <td>{{formatDate backupDate}}</td>
+                        <td>
+                            <div class="cosmo-toolbar__group">
+                                <a target="_blank" href="/api/backup-job/{{job.id}}/backup/{{id}}"
+                                   class="cosmo-button">Download</a>
+                                <button type="button" data-job-id="{{job.id}}" data-id="{{id}}" class="cosmo-button"
+                                        data-action="delete-backup">Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
                 {{/each}}
                 </tbody>
             </table>
         </div>
     </div>
 </script>
-<template id="createJobTemplate">
+<script type="text/x-handlebars-template" id="createJobTemplate">
     <form class="cosmo-modal" data-role="add-job-modal">
         <h1 class="cosmo-modal__title">Add FTP job</h1>
         <div class="cosmo-modal__content">
@@ -157,8 +158,8 @@
             <button class="cosmo-button" data-role="cancel-job-modal" type="button">Cancel</button>
         </div>
     </form>
-</template>
-<template id="editJobTemplate">
+</script>
+<script type="text/x-handlebars-template" id="editJobTemplate">
     <form class="cosmo-modal" data-role="edit-job-modal">
         <h1 class="cosmo-modal__title">Edit FTP job</h1>
         <div class="cosmo-modal__content">
@@ -187,9 +188,9 @@
             <button class="cosmo-button" data-role="cancel-job-modal" type="button">Cancel</button>
         </div>
     </form>
-</template>
+</script>
 
-<script id="userListTemplate" type="text/x-handlebars-template">
+<script type="text/x-handlebars-template" id="userListTemplate">
     <div class="cosmo-page-body__content">
         <div class="cosmo-toolbar">
             <div class="cosmo-toolbar__group">
@@ -206,24 +207,24 @@
             </thead>
             <tbody>
             {{#each users}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{name}}</td>
-                <td>
-                    <div class="cosmo-toolbar__group">
-                        <button type="button" data-id="{{id}}" data-action="edit-user" class="cosmo-button">Edit
-                        </button>
-                        <button type="button" data-id="{{id}}" class="cosmo-button" data-action="delete-user">Delete
-                        </button>
-                    </div>
-                </td>
-            </tr>
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{name}}</td>
+                    <td>
+                        <div class="cosmo-toolbar__group">
+                            <button type="button" data-id="{{id}}" data-action="edit-user" class="cosmo-button">Edit
+                            </button>
+                            <button type="button" data-id="{{id}}" class="cosmo-button" data-action="delete-user">Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
             {{/each}}
             </tbody>
         </table>
     </div>
 </script>
-<template id="addUserTemplate">
+<script type="text/x-handlebars-template" id="addUserTemplate">
     <form class="cosmo-modal" data-role="add-user-modal">
         <div class="cosmo-modal__title">Add user</div>
         <div class="cosmo-modal__content">
@@ -239,8 +240,8 @@
             <button class="cosmo-button" data-action="cancel-modal" type="button">Cancel</button>
         </div>
     </form>
-</template>
-<template id="editUserTemplate">
+</script>
+<script type="text/x-handlebars-template" id="editUserTemplate">
     <form class="cosmo-modal" data-role="edit-user-modal">
         <div class="cosmo-modal__title">Edit user</div>
         <div class="cosmo-modal__content">
@@ -258,8 +259,8 @@
             <button class="cosmo-button" data-action="cancel-modal" type="button">Cancel</button>
         </div>
     </form>
-</template>
+</script>
 <script src="lib/js/handlebars.js"></script>
-<script src="js/index.js" type="module"></script>
+<script type="module" src="js/index.js"></script>
 </body>
 </html>
