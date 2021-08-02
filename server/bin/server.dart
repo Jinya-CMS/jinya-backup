@@ -26,7 +26,9 @@ void main(List<String> args) async {
     return;
   }
 
-  dotenv.load();
+  try {
+    dotenv.load();
+  } catch (e) {}
 
   final app = Router();
   app.mount('/api/user/', UserRouter().router);
@@ -46,7 +48,7 @@ void main(List<String> args) async {
           File('${Directory.current.path}/frontend/$result').openRead(),
           headers: {
             HttpHeaders.contentTypeHeader:
-            mime('${Directory.current.path}/frontend/$result')!
+                mime('${Directory.current.path}/frontend/$result')!
           });
     } catch (e) {
       return Response.notFound(null);
