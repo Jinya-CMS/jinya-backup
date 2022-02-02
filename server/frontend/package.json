@@ -6,6 +6,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@jinyacms/cosmo": "0.11.0"
+    "@jinyacms/cosmo": "0.12.0"
   }
 }
