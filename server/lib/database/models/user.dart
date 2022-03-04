@@ -12,7 +12,27 @@ class User {
   String? name;
   String? password;
 
+  User();
+
   Map toJson() => {'id': id, 'name': name};
+
+  static Future<User> mapUser(Map<String, dynamic> data) async {
+    final user = User();
+    user.name = data['name'];
+    user.id = data['id'];
+    user.password = data['password'];
+
+    return user;
+  }
+
+  factory User.fromJson(Map<String, dynamic> data) {
+    final user = User();
+    user.name = data['name'];
+    user.id = data['id'];
+    user.password = data['password'];
+
+    return user;
+  }
 
   static Future<ApiKey> login(String? name, String password) async {
     final user = await findByName(name);
@@ -98,7 +118,7 @@ class User {
     return crypto.sha512.convert(encodedPassword).toString();
   }
 
-  Future create() async {
+  Future create({hash = true}) async {
     final connection = await connect();
     await connection.open();
     try {
@@ -106,7 +126,7 @@ class User {
           'INSERT INTO "users" (name, password) VALUES (@name, @password)',
           substitutionValues: {
             'name': name,
-            'password': hashPassword(password!),
+            'password': hash ? hashPassword(password!) : password,
           });
     } finally {
       await connection.close();

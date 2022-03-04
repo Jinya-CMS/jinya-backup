@@ -14,8 +14,8 @@ class BackupJob {
   int? port;
   String? type;
   String? username;
-  String? _password;
-  String? _nonce = '';
+  String? password;
+  String? nonce = '';
 
   Uint8List _getSecretKey() {
     return base64Decode(env['DB_SECRET_KEY']!);
@@ -24,21 +24,23 @@ class BackupJob {
   Future<String> getPassword() async {
     final key = AESKey(_getSecretKey());
 
-    return key.decryptToUtf8(_password);
+    return key.decryptToUtf8(password);
   }
 
   Future setPassword(String password) async {
     final key = AESKey(_getSecretKey());
-    _password = key.encryptToBase64(password);
+    password = key.encryptToBase64(password);
   }
 
   String? remotePath;
   String? localPath;
 
+  BackupJob();
+
   static Future<BackupJob> mapJob(Map<String, dynamic> data) async {
     final job = BackupJob();
     job.username = data['backup_job']['username'];
-    job._password = data['backup_job']['password'];
+    job.password = data['backup_job']['password'];
     job.host = data['backup_job']['host'];
     job.port = data['backup_job']['port'];
     job.type = data['backup_job']['type'];
@@ -46,7 +48,23 @@ class BackupJob {
     job.localPath = data['backup_job']['local_path'];
     job.name = data['backup_job']['name'];
     job.id = data['backup_job']['id'];
-    job._nonce = data['backup_job']['nonce'];
+    job.nonce = data['backup_job']['nonce'];
+
+    return job;
+  }
+
+  factory BackupJob.fromJson(Map<String, dynamic> data) {
+    final job = BackupJob();
+    job.username = data['username'];
+    job.password = data['password'];
+    job.host = data['host'];
+    job.port = data['port'];
+    job.type = data['type'];
+    job.remotePath = data['remotePath'];
+    job.localPath = data['localPath'];
+    job.name = data['name'];
+    job.id = data['id'];
+    job.nonce = data['nonce'];
 
     return job;
   }
@@ -58,6 +76,24 @@ class BackupJob {
       final result = await connection.mappedResultsQuery(
           'SELECT id, name, host, port, type, username, password, remote_path, local_path, nonce FROM "backup_job" WHERE id=@id',
           substitutionValues: {'id': id});
+
+      if (result.isEmpty) {
+        throw NoResultException();
+      }
+
+      return await mapJob(result.first);
+    } finally {
+      await connection.close();
+    }
+  }
+
+  static Future<BackupJob> findByName(String? name) async {
+    final connection = await connect();
+    await connection.open();
+    try {
+      final result = await connection.mappedResultsQuery(
+          'SELECT id, name, host, port, type, username, password, remote_path, local_path, nonce FROM "backup_job" WHERE name=@name',
+          substitutionValues: {'name': name});
 
       if (result.isEmpty) {
         throw NoResultException();
@@ -98,11 +134,11 @@ class BackupJob {
             'host': host,
             'port': port ?? 21,
             'type': type ?? 'ftp',
-            'password': _password,
+            'password': password,
             'username': username,
             'remote_path': remotePath,
             'local_path': localPath,
-            'nonce': _nonce,
+            'nonce': nonce,
           });
       final directory = Directory(localPath!);
       if (!await directory.exists()) {
@@ -126,10 +162,10 @@ class BackupJob {
             'port': port ?? 21,
             'type': type ?? 'ftp',
             'username': username,
-            'password': _password,
+            'password': password,
             'remote_path': remotePath,
             'local_path': localPath,
-            'nonce': _nonce,
+            'nonce': nonce,
           });
       final directory = Directory(localPath!);
       if (!await directory.exists()) {

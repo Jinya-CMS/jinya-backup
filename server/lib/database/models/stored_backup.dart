@@ -11,6 +11,8 @@ class StoredBackup {
   DateTime? backupDate;
   late BackupJob job;
 
+  StoredBackup();
+
   static Future<StoredBackup> mapBackup(Map<String, dynamic> data) async {
     final backup = StoredBackup();
     backup.id = data['stored_backup']['id'];
@@ -19,6 +21,17 @@ class StoredBackup {
     backup.fullPath = data['stored_backup']['full_path'];
     backup.job =
         await BackupJob.findById(data['stored_backup']['backup_job_id']);
+
+    return backup;
+  }
+
+  factory StoredBackup.fromJson(Map<String, dynamic> data) {
+    final backup = StoredBackup();
+    backup.id = data['id'];
+    backup.name = data['name'];
+    backup.backupDate = DateTime.parse(data['backupDate']);
+    backup.fullPath = data['fullPath'];
+    backup.job = BackupJob.fromJson(data['job']);
 
     return backup;
   }
@@ -110,8 +123,7 @@ class StoredBackup {
     }
   }
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
         'fullPath': fullPath,

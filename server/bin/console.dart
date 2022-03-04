@@ -5,6 +5,7 @@ import 'package:args/args.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:dotenv/dotenv.dart';
 import 'package:jinya_backup/database/export.dart';
+import 'package:jinya_backup/database/import.dart';
 import 'package:jinya_backup/database/models/user.dart';
 import 'package:postgres/postgres.dart';
 
@@ -28,10 +29,12 @@ void main(List<String> args) async {
   load();
   final installCommand = ArgParser();
   final exportCommand = ArgParser();
+  final importCommand = ArgParser();
   final parser = ArgParser();
 
   parser.addCommand('install', installCommand);
   parser.addCommand('export', exportCommand);
+  parser.addCommand('import', importCommand);
 
   installCommand
     ..addOption('dbhost')
@@ -42,6 +45,7 @@ void main(List<String> args) async {
     ..addOption('username')
     ..addOption('password');
   exportCommand.addOption('path', mandatory: true);
+  importCommand.addOption('path', mandatory: true);
 
   final result = parser.parse(args);
   if (result.command?.name == 'install') {
@@ -133,5 +137,15 @@ void main(List<String> args) async {
     final backup = await exportData();
     File(path).openWrite().write(jsonEncode(backup));
     stdout.writeln('Export file written to ' + path);
+    stdout.writeln(
+        'Make sure to use the same DB_SECRET_KEY environment variable');
+    stdout.writeln(env['DB_SECRET_KEY']);
+  } else if (result.command?.name == 'import') {
+    stdout.writeln('Start database import');
+    final path = result.command!['path'];
+    final data = await File(path).readAsString();
+    final backup = json.decode(data);
+    await importData(ExportData.fromJson(backup));
+    stdout.writeln('Import done successfully');
   }
 }
