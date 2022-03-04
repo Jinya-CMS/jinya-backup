@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:dotenv/dotenv.dart';
+import 'package:jinya_backup/database/export.dart';
 import 'package:jinya_backup/database/models/user.dart';
 import 'package:postgres/postgres.dart';
 
@@ -25,10 +26,14 @@ void _writeDotEnv(String host, String port, String user, String password,
 
 void main(List<String> args) async {
   load();
-  final command = ArgParser();
+  final installCommand = ArgParser();
+  final exportCommand = ArgParser();
   final parser = ArgParser();
-  parser.addCommand('install', command);
-  command
+
+  parser.addCommand('install', installCommand);
+  parser.addCommand('export', exportCommand);
+
+  installCommand
     ..addOption('dbhost')
     ..addOption('dbport')
     ..addOption('dbdatabase')
@@ -36,14 +41,17 @@ void main(List<String> args) async {
     ..addOption('dbpassword')
     ..addOption('username')
     ..addOption('password');
+  exportCommand.addOption('path', mandatory: true);
+
   final result = parser.parse(args);
   if (result.command?.name == 'install') {
-    final args = result.command!;
-    final host = args['dbhost'] ?? env['DB_HOST'] ?? 'localhost';
-    final port = args['dbport'] ?? env['DB_PORT'] ?? '5432';
-    final user = args['dbuser'] ?? env['DB_USER'] ?? '';
-    final password = args['dbpassword'] ?? env['DB_PASSWORD'] ?? '';
-    final database = args['dbdatabase'] ?? env['DB_DATABASE'] ?? 'jinya-backup';
+    final installArgs = result.command!;
+    final host = installArgs['dbhost'] ?? env['DB_HOST'] ?? 'localhost';
+    final port = installArgs['dbport'] ?? env['DB_PORT'] ?? '5432';
+    final user = installArgs['dbuser'] ?? env['DB_USER'] ?? '';
+    final password = installArgs['dbpassword'] ?? env['DB_PASSWORD'] ?? '';
+    final database =
+        installArgs['dbdatabase'] ?? env['DB_DATABASE'] ?? 'jinya-backup';
 
     stdout.writeln('Start database creation');
     var databaseExists = false;
@@ -110,14 +118,20 @@ void main(List<String> args) async {
       await connection.execute(
           'INSERT INTO "users" (name, password) VALUES (@name, @password)',
           substitutionValues: {
-            'name': args['username'] ?? env['DB_FIRST_USER_NAME'],
+            'name': installArgs['username'] ?? env['DB_FIRST_USER_NAME'],
             'password': User.hashPassword(
-                args['password'] ?? env['DB_FIRST_USER_PASSWORD']!)
+                installArgs['password'] ?? env['DB_FIRST_USER_PASSWORD']!)
           });
     }
 
     stdout.writeln('Write dotenv variable');
     _writeDotEnv(host, port, user, password, database);
     exit(0);
+  } else if (result.command?.name == 'export') {
+    stdout.writeln('Start database export');
+    final path = result.command!['path'];
+    final backup = await exportData();
+    File(path).openWrite().write(jsonEncode(backup));
+    stdout.writeln('Export file written to ' + path);
   }
 }
