@@ -1,6 +1,9 @@
 package database
 
-import "os"
+import (
+	_ "github.com/lib/pq"
+	"os"
+)
 
 func createInitialUser() error {
 	firstUserName := os.Getenv("DB_FIRST_USER_NAME")
