@@ -1,4 +1,4 @@
-package main
+package worker
 
 type Job struct {
 	Id       string `yaml:"id"`

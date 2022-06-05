@@ -10,7 +10,7 @@ import 'package:uuid/uuid.dart';
 class User {
   String? id;
   String? name;
-  String? password;
+  String? password; 
 
   User();
 

@@ -83,28 +83,10 @@ void main(List<String> args) async {
         ''');
       // language=sql
       await connection.execute('''
-        CREATE TABLE "backup_job" (
-          id uuid primary key default uuid_generate_v4(),
-          name text not null,
-          host text not null,
-          port int not null default 21,
-          type text not null default 'ftp',
-          username text not null default '',
-          password text not null default '',
-          remote_path text not null,
-          local_path text not null,
-          nonce text not null
-        )
-        ''');
+        CREATE TABLE "backup_job" (id uuid primary key default uuid_generate_v4(), name text not null, host text not null, port int not null default 21, type text not null default 'ftp', username text not null default '', password text not null default '', remote_path text not null, local_path text not null, nonce text not null) ''');
       // language=sql
       await connection.execute('''
-        CREATE TABLE "stored_backup" (
-          id uuid primary key default uuid_generate_v4(),
-          full_path text not null,
-          name text not null,
-          backup_date timestamp not null default now(),
-          backup_job_id uuid references "backup_job"(id)
-        )
+        CREATE TABLE "stored_backup" (id uuid primary key default uuid_generate_v4(), full_path text not null, name text not null, backup_date timestamp not null default now(), backup_job_id uuid references "backup_job"(id))
         ''');
       // language=sql
       await connection.execute('''

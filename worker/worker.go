@@ -1,4 +1,4 @@
-package main
+package worker
 
 import (
 	"archive/tar"
@@ -9,7 +9,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"io/ioutil"
-	"jinya-backup/runner"
+	"jinya-backup/worker/runner"
 	"log"
 	"net/http"
 	"os"
@@ -185,7 +185,7 @@ func processor(wg *sync.WaitGroup, jobChan chan Job, logChan chan string, id int
 	wg.Done()
 }
 
-func main() {
+func RunBackupWorker() {
 	log.Println("Start worker...")
 	pwd, _ := os.Getwd()
 	configFilePath := ""
