@@ -7,9 +7,9 @@ import (
 )
 
 type User struct {
-	Id       string `db:"id"`
-	Name     string `db:"name"`
-	Password string `db:"password"`
+	Id       string `db:"id" json:"id"`
+	Name     string `db:"name" json:"name"`
+	Password string `db:"password" json:"-"`
 }
 
 func hashPassword(password string) (string, error) {

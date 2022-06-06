@@ -22,7 +22,7 @@ export async function displayUsers() {
     });
     document.querySelectorAll('[data-action=edit-user]').forEach((item) => {
         item.addEventListener('click', async (e) => {
-            const user = users.filter(f => f.id === item.getAttribute('data-id'));
+            const user = users.filter(f => f.id === item.getAttribute('data-id'))[0];
             const template = Handlebars.compile(document.getElementById('editUserTemplate').innerHTML);
             const closeModal = await displayModal(template(user));
             document.querySelector('[data-role=edit-user-modal]').addEventListener('submit', async (e) => {

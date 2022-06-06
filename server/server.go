@@ -28,7 +28,13 @@ func RunServer() {
 		w.WriteHeader(http.StatusNoContent)
 	}))
 
-	router.ServeFiles("/*filepath", http.Dir("./web"))
+	router.GET("/api/user", routes.AuthenticatedMiddleware(routes.ListUsers))
+	router.POST("/api/user", routes.AuthenticatedMiddleware(routes.CreateUser))
+	router.GET("/api/user/:id", routes.AuthenticatedMiddleware(routes.GetUserById))
+	router.PUT("/api/user/:id", routes.AuthenticatedMiddleware(routes.UpdateUser))
+	router.DELETE("/api/user/:id", routes.AuthenticatedMiddleware(routes.DeleteUser))
+
+	router.NotFound = http.FileServer(http.Dir("./web"))
 
 	err = http.ListenAndServe(":"+port, router)
 	if err != nil {
