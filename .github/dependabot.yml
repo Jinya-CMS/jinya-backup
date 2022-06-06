@@ -1,12 +1,10 @@
 version: 2
 updates:
   - package-ecosystem: gomod
-    directory: /worker
+    directory: /
     schedule:
       interval: daily
   - package-ecosystem: "npm"
-    # Look for `package.json` and `lock` files in the `root` directory
-    directory: /server/frontend
-    # Check the npm registry for updates every day (weekdays)
+    directory: /web
     schedule:
       interval: "daily"

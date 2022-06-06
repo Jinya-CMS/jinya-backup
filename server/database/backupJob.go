@@ -15,7 +15,7 @@ type BackupJob struct {
 	Port       int    `db:"port"`
 	Type       string `db:"type"`
 	Username   string `db:"username"`
-	password   string `db:"password"`
+	Password   string `db:"password"`
 	RemotePath string `db:"remote_path"`
 	LocalPath  string `db:"local_path"`
 }
@@ -58,7 +58,7 @@ func (backupJob *BackupJob) Create() error {
 
 	defer db.Close()
 
-	_, err = db.Exec("INSERT INTO backup_job (name, host, port, type, username, password, remote_path, local_path) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)", backupJob.Name, backupJob.Host, backupJob.Port, backupJob.Type, backupJob.Username, backupJob.password, backupJob.RemotePath, backupJob.LocalPath)
+	_, err = db.Exec("INSERT INTO backup_job (name, host, port, type, username, password, remote_path, local_path) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)", backupJob.Name, backupJob.Host, backupJob.Port, backupJob.Type, backupJob.Username, backupJob.Password, backupJob.RemotePath, backupJob.LocalPath)
 
 	if err != nil {
 		return err
@@ -82,7 +82,7 @@ func (backupJob *BackupJob) Update() error {
 
 	defer db.Close()
 
-	_, err = db.Exec("UPDATE backup_job SET name = $1, host = $2, port = $3, type = $4, username = $5, password = $6, remote_path = $6, local_path = $7 WHERE id = $8", backupJob.Id, backupJob.Name, backupJob.Host, backupJob.Port, backupJob.Type, backupJob.Username, backupJob.password, backupJob.RemotePath, backupJob.LocalPath)
+	_, err = db.Exec("UPDATE backup_job SET name = $1, host = $2, port = $3, type = $4, username = $5, password = $6, remote_path = $6, local_path = $7 WHERE id = $8", backupJob.Id, backupJob.Name, backupJob.Host, backupJob.Port, backupJob.Type, backupJob.Username, backupJob.Password, backupJob.RemotePath, backupJob.LocalPath)
 
 	if _, err := os.Stat(backupJob.LocalPath); errors.Is(err, fs.ErrNotExist) {
 		err = os.MkdirAll(backupJob.LocalPath, 0775)
@@ -123,7 +123,7 @@ func (backupJob *BackupJob) SetPassword(password string) error {
 	cipher.Encrypt(encryptedBytes, []byte(password))
 
 	encryptedPassword := base64.StdEncoding.EncodeToString(encryptedBytes)
-	backupJob.password = encryptedPassword
+	backupJob.Password = encryptedPassword
 
 	return nil
 }
@@ -140,7 +140,7 @@ func (backupJob *BackupJob) GetPassword() (string, error) {
 		return "", err
 	}
 
-	decodedPassword, err := base64.StdEncoding.DecodeString(backupJob.password)
+	decodedPassword, err := base64.StdEncoding.DecodeString(backupJob.Password)
 	if err != nil {
 		return "", err
 	}

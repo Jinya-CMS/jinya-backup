@@ -2,14 +2,14 @@ package database
 
 import (
 	"crypto/sha512"
-	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 )
 
 type User struct {
 	Id       string `db:"id"`
 	Name     string `db:"name"`
-	password string `db:"password"`
+	Password string `db:"password"`
 }
 
 func hashPassword(password string) (string, error) {
@@ -20,7 +20,7 @@ func hashPassword(password string) (string, error) {
 	}
 
 	hashed := sha.Sum(nil)
-	return base64.URLEncoding.EncodeToString(hashed), nil
+	return hex.EncodeToString(hashed), nil
 }
 
 func FindAllUsers() ([]User, error) {
@@ -79,7 +79,7 @@ func Login(username, password string) (*ApiKey, *User, error) {
 		return nil, nil, err
 	}
 
-	if user.password != hashedPw {
+	if user.Password != hashedPw {
 		return nil, nil, fmt.Errorf("hashes don't match")
 	}
 
@@ -99,7 +99,7 @@ func (user *User) SetPassword(password string) error {
 		return err
 	}
 
-	user.password = pw
+	user.Password = pw
 
 	return nil
 }
@@ -112,7 +112,7 @@ func (user *User) Create() error {
 
 	defer db.Close()
 
-	_, err = db.Exec("INSERT INTO users (name, password) VALUES ($1, $2)", user.Name, user.password)
+	_, err = db.Exec("INSERT INTO users (name, password) VALUES ($1, $2)", user.Name, user.Password)
 
 	return err
 }
@@ -124,7 +124,7 @@ func (user *User) Update() error {
 
 	defer db.Close()
 
-	_, err = db.Exec("UPDATE users SET name = $1, password = $2 WHERE id = $3", user.Name, user.password, user.Id)
+	_, err = db.Exec("UPDATE users SET name = $1, password = $2 WHERE id = $3", user.Name, user.Password, user.Id)
 
 	return err
 }

@@ -1,7 +1,9 @@
 package server
 
 import (
+	"github.com/julienschmidt/httprouter"
 	"jinya-backup/server/database"
+	"jinya-backup/server/routes"
 	"log"
 	"net/http"
 	"os"
@@ -17,8 +19,18 @@ func RunServer() {
 	if port == "" {
 		port = "8080"
 	}
-	http.Handle("/", http.FileServer(http.Dir("./web")))
-	err = http.ListenAndServe(":"+port, nil)
+
+	router := httprouter.New()
+
+	router.POST("/api/login", routes.UserLogin)
+	router.DELETE("/api/login", routes.AuthenticatedMiddleware(routes.UserLogout))
+	router.HEAD("/api/login", routes.AuthenticatedMiddleware(func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+		w.WriteHeader(http.StatusNoContent)
+	}))
+
+	router.ServeFiles("/*filepath", http.Dir("./web"))
+
+	err = http.ListenAndServe(":"+port, router)
 	if err != nil {
 		panic(err)
 	}
