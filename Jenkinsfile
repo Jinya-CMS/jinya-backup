@@ -55,22 +55,23 @@ spec:
                     }
                 }
                 stage('Push docker image') {
+                    when {
+                        buildingTag()
+                    }
                     steps {
                         container('docker') {
-                            dir('./server') {
-                                sh "docker build -t quay.imanuel.dev/jinya/jinya-backup:v2.$BUILD_NUMBER-experimental -f ./Dockerfile ."
-//                                 sh "docker tag quay.imanuel.dev/jinya/jinya-backup:v2.$BUILD_NUMBER quay.imanuel.dev/jinya/jinya-backup:latest"
-                                sh "docker tag quay.imanuel.dev/jinya/jinya-backup:v2.$BUILD_NUMBER-experimental jinyacms/jinya-backup:v2.$BUILD_NUMBER-experimental"
-//                                 sh "docker tag quay.imanuel.dev/jinya/jinya-backup:v2.$BUILD_NUMBER jinyacms/jinya-backup:latest"
+                            sh "docker build -t quay.imanuel.dev/jinya/jinya-backup:$TAG_NAME -f ./Dockerfile ."
+                            sh "docker tag quay.imanuel.dev/jinya/jinya-backup:$TAG_NAME quay.imanuel.dev/jinya/jinya-backup:latest"
+                            sh "docker tag quay.imanuel.dev/jinya/jinya-backup:$TAG_NAME jinyacms/jinya-backup:$TAG_NAME"
+                            sh "docker tag quay.imanuel.dev/jinya/jinya-backup:$TAG_NAME jinyacms/jinya-backup:latest"
 
-                                withDockerRegistry(credentialsId: 'quay.imanuel.dev', url: 'https://quay.imanuel.dev') {
-                                    sh "docker push quay.imanuel.dev/jinya/jinya-backup:v2.$BUILD_NUMBER-experimental"
-//                                     sh "docker push quay.imanuel.dev/jinya/jinya-backup:latest"
-                                }
-                                withDockerRegistry(credentialsId: 'hub.docker.com', url: '') {
-                                    sh "docker push jinyacms/jinya-backup:v2.$BUILD_NUMBER-experimental"
-//                                     sh "docker push jinyacms/jinya-backup:latest"
-                                }
+                            withDockerRegistry(credentialsId: 'quay.imanuel.dev', url: 'https://quay.imanuel.dev') {
+                                sh "docker push quay.imanuel.dev/jinya/jinya-backup:$TAG_NAME"
+                                sh "docker push quay.imanuel.dev/jinya/jinya-backup:latest"
+                            }
+                            withDockerRegistry(credentialsId: 'hub.docker.com', url: '') {
+                                sh "docker push jinyacms/jinya-backup:$TAG_NAME"
+                                sh "docker push jinyacms/jinya-backup:latest"
                             }
                         }
                     }
