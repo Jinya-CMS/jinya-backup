@@ -5,11 +5,11 @@ import (
 )
 
 type StoredBackup struct {
-	Id         string    `db:"id"`
-	Name       string    `db:"name"`
-	FullPath   string    `db:"full_path"`
-	BackupDate time.Time `db:"backup_date"`
-	JobId      string    `db:"backup_job_id"`
+	Id         string    `db:"id" json:"id"`
+	Name       string    `db:"name" json:"name"`
+	FullPath   string    `db:"full_path" json:"fullPath"`
+	BackupDate time.Time `db:"backup_date" json:"backupDate"`
+	JobId      string    `db:"backup_job_id" json:"jobId"`
 }
 
 func FindAllStoredBackups() ([]StoredBackup, error) {

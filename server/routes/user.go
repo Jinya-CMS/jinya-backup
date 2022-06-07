@@ -8,6 +8,11 @@ import (
 	"net/http"
 )
 
+type userPostData struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 func isMyself(r *http.Request, userId string) bool {
 	authCookie, err := r.Cookie("Jinya-Auth")
 	if err != nil {
@@ -42,6 +47,7 @@ func ListUsers(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(result)
 }
 
@@ -60,6 +66,7 @@ func GetUserById(w http.ResponseWriter, r *http.Request, params httprouter.Param
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(result)
 }
 
@@ -69,11 +76,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, params httprouter.Params
 	if err != nil {
 		http.NotFound(w, r)
 		return
-	}
-
-	type userPostData struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
 	}
 
 	postBody, err := ioutil.ReadAll(r.Body)
@@ -132,11 +134,6 @@ func DeleteUser(w http.ResponseWriter, r *http.Request, params httprouter.Params
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	type userPostData struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
-
 	postBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

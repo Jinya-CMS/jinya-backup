@@ -93,7 +93,7 @@ export async function displayJobs() {
     resetContent();
     document.querySelector('[data-menu=login]').classList.add('jinya-hidden');
     document.querySelector('[data-menu=app]').classList.remove('jinya-hidden');
-    const response = await request('/api/backup-job/', 'GET');
+    const response = await request('/api/backup-job', 'GET');
     if (response.status !== 200) {
         alert('Loading failed')
     } else {
@@ -125,7 +125,7 @@ export async function displayJobs() {
                     password: document.getElementById('password').value,
                     username: document.getElementById('username').value,
                 };
-                const response = await request('/api/backup-job/', 'POST', data);
+                const response = await request('/api/backup-job', 'POST', data);
                 closeModal();
                 if (response.status === 201) {
                     await displayJobs();

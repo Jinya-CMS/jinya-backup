@@ -36,9 +36,11 @@ func UserLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	authCookie := new(http.Cookie)
 	authCookie.Name = "Jinya-Auth"
 	authCookie.Value = apiKey.Token
+	authCookie.Path = "/"
 	authCookie.HttpOnly = true
 
 	http.SetCookie(w, authCookie)
+	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(responseBody)
 }
 

@@ -34,6 +34,15 @@ func RunServer() {
 	router.PUT("/api/user/:id", routes.AuthenticatedMiddleware(routes.UpdateUser))
 	router.DELETE("/api/user/:id", routes.AuthenticatedMiddleware(routes.DeleteUser))
 
+	router.GET("/api/backup-job", routes.AuthenticatedMiddleware(routes.ListBackupJobs))
+	router.POST("/api/backup-job", routes.AuthenticatedMiddleware(routes.CreateBackupJob))
+	router.PUT("/api/backup-job/:id", routes.AuthenticatedMiddleware(routes.UpdateBackupJob))
+	router.DELETE("/api/backup-job/:id", routes.AuthenticatedMiddleware(routes.DeleteBackupJob))
+
+	router.GET("/api/backup-job/:id/backup", routes.AuthenticatedMiddleware(routes.GetStoredBackupsByJob))
+	router.GET("/api/backup-job/:id/backup/:backupId", routes.AuthenticatedMiddleware(routes.DownloadStoredBackup))
+	router.DELETE("/api/backup-job/:id/backup/:backupId", routes.AuthenticatedMiddleware(routes.DeleteStoredBackup))
+
 	router.NotFound = http.FileServer(http.Dir("./web"))
 
 	err = http.ListenAndServe(":"+port, router)

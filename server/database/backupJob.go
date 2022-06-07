@@ -2,22 +2,26 @@ package database
 
 import (
 	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
 	"encoding/base64"
 	"errors"
+	"fmt"
+	"io"
 	"io/fs"
 	"os"
 )
 
 type BackupJob struct {
-	Id         string `db:"id"`
-	Name       string `db:"name"`
-	Host       string `db:"host"`
-	Port       int    `db:"port"`
-	Type       string `db:"type"`
-	Username   string `db:"username"`
-	Password   string `db:"password"`
-	RemotePath string `db:"remote_path"`
-	LocalPath  string `db:"local_path"`
+	Id         string `db:"id" json:"id"`
+	Name       string `db:"name" json:"name"`
+	Host       string `db:"host" json:"host"`
+	Port       int    `db:"port" json:"port"`
+	Type       string `db:"type" json:"type"`
+	Username   string `db:"username" json:"username"`
+	Password   string `db:"password" json:"-"`
+	RemotePath string `db:"remote_path" json:"remotePath"`
+	LocalPath  string `db:"local_path" json:"localPath"`
 }
 
 func FindAllBackupJobs() ([]BackupJob, error) {
@@ -108,34 +112,41 @@ func (backupJob *BackupJob) Delete() error {
 }
 
 func (backupJob *BackupJob) SetPassword(password string) error {
-	dbSecret := os.Getenv("DB_SECRET_KEY")
-	decodedSecret, err := base64.StdEncoding.DecodeString(dbSecret)
+	decodedSecret, err := base64.StdEncoding.DecodeString(os.Getenv("DB_SECRET_KEY"))
 	if err != nil {
 		return err
 	}
 
-	cipher, err := aes.NewCipher(decodedSecret)
+	cphr, err := aes.NewCipher(decodedSecret)
 	if err != nil {
 		return err
 	}
 
-	encryptedBytes := make([]byte, 0)
-	cipher.Encrypt(encryptedBytes, []byte(password))
+	gcm, err := cipher.NewGCM(cphr)
+	if err != nil {
+		fmt.Println(err)
+	}
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+		fmt.Println(err)
+	}
 
-	encryptedPassword := base64.StdEncoding.EncodeToString(encryptedBytes)
+	out := gcm.Seal(nonce, nonce, []byte(password), nil)
+
+	encryptedPassword := base64.StdEncoding.EncodeToString(out)
 	backupJob.Password = encryptedPassword
 
 	return nil
 }
 
-func (backupJob *BackupJob) GetPassword() (string, error) {
+func (backupJob *BackupJob) decryptPasswordAES() (string, error) {
 	dbSecret := os.Getenv("DB_SECRET_KEY")
 	decodedSecret, err := base64.StdEncoding.DecodeString(dbSecret)
 	if err != nil {
 		return "", err
 	}
 
-	cipher, err := aes.NewCipher(decodedSecret)
+	cphr, err := aes.NewCipher(decodedSecret)
 	if err != nil {
 		return "", err
 	}
@@ -145,8 +156,42 @@ func (backupJob *BackupJob) GetPassword() (string, error) {
 		return "", err
 	}
 
-	decryptedBytes := make([]byte, 0)
-	cipher.Decrypt(decryptedBytes, decodedPassword)
+	decryptedBytes := make([]byte, len(decodedPassword))
+	cphr.Decrypt(decryptedBytes, decodedPassword)
+
+	return string(decryptedBytes), nil
+}
+
+func (backupJob *BackupJob) GetPassword() (string, error) {
+	dbSecret := os.Getenv("DB_SECRET_KEY")
+	decodedSecret, err := base64.StdEncoding.DecodeString(dbSecret)
+	if err != nil {
+		return "", err
+	}
+
+	cphr, err := aes.NewCipher(decodedSecret)
+	if err != nil {
+		return "", err
+	}
+
+	decodedPassword, err := base64.StdEncoding.DecodeString(backupJob.Password)
+	if err != nil {
+		return "", err
+	}
+
+	gcmDecrypt, err := cipher.NewGCM(cphr)
+	if err != nil {
+		fmt.Println(err)
+	}
+	nonceSize := gcmDecrypt.NonceSize()
+	if len(decodedPassword) < nonceSize {
+		fmt.Println(err)
+	}
+	nonce, encryptedMessage := decodedPassword[:nonceSize], decodedPassword[nonceSize:]
+	decryptedBytes, err := gcmDecrypt.Open(nil, nonce, encryptedMessage, nil)
+	if err != nil {
+		return backupJob.decryptPasswordAES()
+	}
 
 	return string(decryptedBytes), nil
 }
@@ -161,7 +206,7 @@ func (backupJob *BackupJob) GetStoredBackups() ([]StoredBackup, error) {
 
 	storedBackups := make([]StoredBackup, 0)
 
-	err = db.Get(storedBackups, "SELECT id, full_path, name, backup_date, backup_job_id FROM stored_backup WHERE backup_job_id = $1", backupJob.Id)
+	err = db.Select(&storedBackups, "SELECT id, full_path, name, backup_date, backup_job_id FROM stored_backup WHERE backup_job_id = $1", backupJob.Id)
 
 	return storedBackups, err
 }

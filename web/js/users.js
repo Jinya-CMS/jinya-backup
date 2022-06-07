@@ -2,7 +2,7 @@ import {confirm, displayModal, pageBody, request, resetContent} from "./utils.js
 
 export async function displayUsers() {
     resetContent();
-    const users = await (await request('/api/user/', 'GET')).json()
+    const users = await (await request('/api/user', 'GET')).json()
     const template = Handlebars.compile(document.getElementById('userListTemplate').innerHTML);
     pageBody.innerHTML = template({users});
     document.querySelectorAll('[data-action=delete-user]').forEach((item) => {
@@ -54,7 +54,7 @@ export async function displayUsers() {
                     username: document.getElementById('username').value,
                     password: document.getElementById('password').value,
                 };
-                if ((await request(`/api/user/`, 'POST', data)).status === 201) {
+                if ((await request(`/api/user`, 'POST', data)).status === 201) {
                     closeModal();
                     await displayUsers();
                 } else {
