@@ -9,7 +9,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"io/ioutil"
-	"jinya-backup/worker/runner"
+	"jinya-backup/helper"
 	"log"
 	"net/http"
 	"os"
@@ -210,7 +210,7 @@ func RunBackupWorker() {
 		logChan = make(chan string)
 		wg      = &sync.WaitGroup{}
 	)
-	wg.Add(runner.CpuCount)
+	wg.Add(helper.CpuCount)
 
 	go func(logChan chan string) {
 		for logEntry := range logChan {
@@ -218,7 +218,7 @@ func RunBackupWorker() {
 		}
 	}(logChan)
 
-	for i := 0; i < runner.CpuCount; i++ {
+	for i := 0; i < helper.CpuCount; i++ {
 		go processor(wg, jobChan, logChan, i, config.Server)
 	}
 

@@ -1,5 +1,6 @@
+//go:build !cgo
 // +build !cgo
 
-package runner
+package helper
 
 const CpuCount = 8

@@ -40,17 +40,15 @@ spec:
                 stage('Build CGO worker') {
                     steps {
                         container('golang') {
-                            dir('./worker') {
-                                sh "wget https://www.musl-libc.org/releases/musl-1.2.3.tar.gz"
-                                sh "tar -xvf musl-1.2.3.tar.gz"
-                                dir ('./musl-1.2.3') {
-                                    sh "./configure"
-                                    sh "make"
-                                    sh "make install"
-                                }
-                                sh "CC=/usr/local/musl/bin/musl-gcc go build --ldflags '-linkmode external -extldflags \"-static\"' -o jinya-backup-worker ."
-                                archiveArtifacts artifacts: 'jinya-backup-worker', followSymlinks: false
+                            sh "wget https://www.musl-libc.org/releases/musl-1.2.3.tar.gz"
+                            sh "tar -xvf musl-1.2.3.tar.gz"
+                            dir ('./musl-1.2.3') {
+                                sh "./configure"
+                                sh "make"
+                                sh "make install"
                             }
+                            sh "CC=/usr/local/musl/bin/musl-gcc go build --ldflags '-linkmode external -extldflags \"-static\"' -o jinya-backup-worker ."
+                            archiveArtifacts artifacts: 'jinya-backup-worker', followSymlinks: false
                         }
                     }
                 }

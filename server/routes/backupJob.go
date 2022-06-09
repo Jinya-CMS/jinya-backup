@@ -5,6 +5,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"io/ioutil"
 	"jinya-backup/server/database"
+	"jinya-backup/server/download"
+	"log"
 	"net/http"
 )
 
@@ -119,7 +121,7 @@ func UpdateBackupJob(w http.ResponseWriter, r *http.Request, params httprouter.P
 		}
 	}
 
-	err = backupJob.Create()
+	err = backupJob.Update()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -128,7 +130,7 @@ func UpdateBackupJob(w http.ResponseWriter, r *http.Request, params httprouter.P
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func DeleteBackupJob(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func DeleteBackupJob(w http.ResponseWriter, _ *http.Request, params httprouter.Params) {
 	backupJob, err := database.FindBackupJobById(params.ByName("id"))
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -140,6 +142,20 @@ func DeleteBackupJob(w http.ResponseWriter, r *http.Request, params httprouter.P
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func TriggerDownload(w http.ResponseWriter, _ *http.Request, params httprouter.Params) {
+	id := params.ByName("id")
+	backupJob, err := database.FindBackupJobById(id)
+	if err != nil {
+		log.Printf("Failed to find backup job by id %s\n", id)
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	download.QueueJob(*backupJob)
 
 	w.WriteHeader(http.StatusNoContent)
 }

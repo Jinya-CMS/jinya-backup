@@ -2,7 +2,9 @@ package server
 
 import (
 	"github.com/julienschmidt/httprouter"
+	"jinya-backup/helper"
 	"jinya-backup/server/database"
+	"jinya-backup/server/download"
 	"jinya-backup/server/routes"
 	"log"
 	"net/http"
@@ -40,11 +42,18 @@ func RunServer() {
 	router.DELETE("/api/backup-job/:id", routes.AuthenticatedMiddleware(routes.DeleteBackupJob))
 
 	router.GET("/api/backup-job/:id/backup", routes.AuthenticatedMiddleware(routes.GetStoredBackupsByJob))
+	router.POST("/api/backup-job/:id/backup", routes.TriggerDownload)
 	router.GET("/api/backup-job/:id/backup/:backupId", routes.AuthenticatedMiddleware(routes.DownloadStoredBackup))
 	router.DELETE("/api/backup-job/:id/backup/:backupId", routes.AuthenticatedMiddleware(routes.DeleteStoredBackup))
 
 	router.NotFound = http.FileServer(http.Dir("./web"))
 
+	for i := 0; i < helper.CpuCount; i++ {
+		go download.StartJobWorker()
+	}
+
+	log.Printf("Serving on localhost:%s", port)
+	log.Printf("Serving on 0.0.0.0:%s", port)
 	err = http.ListenAndServe(":"+port, router)
 	if err != nil {
 		panic(err)
