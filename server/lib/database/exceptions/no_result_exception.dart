@@ -1,1 +1,0 @@
-class NoResultException implements Exception {}

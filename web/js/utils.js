@@ -58,11 +58,11 @@ export function confirm(title, message, okButton = 'Ok', cancelButton = 'Cancel'
     const closeModal = displayModal(modalHtml);
 
     return new Promise((resolve) => {
-        document.querySelector('[data-action="modal-ok"]').addEventListener('click', (e) => {
+        document.querySelector('[data-action="modal-ok"]').addEventListener('click', () => {
             resolve(true);
             closeModal();
         });
-        document.querySelector('[data-action="modal-cancel"]').addEventListener('click', (e) => {
+        document.querySelector('[data-action="modal-cancel"]').addEventListener('click', () => {
             resolve(false);
             closeModal();
         });
@@ -87,12 +87,14 @@ export function initMenuNavigation() {
         resetMenuClass();
         e.target.classList.add('cosmo-menu-bar__main-item--active');
         await displayJobs();
+        location.hash = '#backups';
     });
     document.querySelector('[data-menu-item=users]').addEventListener('click', async (e) => {
         e.preventDefault();
         resetMenuClass();
         e.target.classList.add('cosmo-menu-bar__main-item--active');
         await displayUsers();
+        location.hash = '#users';
     });
     if (window.location.hash === '#users') {
         resetMenuClass();
