@@ -17,8 +17,6 @@ docker tags.
 
 To configure Jinya Backup you need to set several environment variables. Please make sure, that you have set all of
 them.
-CONNECTION_STRING=host=localhost port=5432 user=jinya password=jinya dbname=jinya
-sslmode=disable;PORT=3050;DB_SECRET_KEY=EGTyihxEzdCxLIkcM6OCeZkJ/AVu3aPp6U3RASGWPI8=
 
 | Variable                 | Description                                   | Sample                                                                          |
 |--------------------------|-----------------------------------------------|---------------------------------------------------------------------------------|
@@ -33,9 +31,7 @@ The Jinya Backup Worker is the push part of Jinya Backup. It executes either `my
 
 ### Installation
 
-Installing the Worker is pretty easy, you only need to download the latest version from
-here: https://jenkins.imanuel.dev/blue/organizations/jenkins/Jinya-CMS%2Fjinya-backup/activity Click the latest build
-number and download the `jinya-backup-worker` file from the artifacts tab.
+Installing the Worker is pretty easy, you only need to download the latest version from the Github releases.
 
 Apart from the download you need to create a config file, check the Configuration section for the YAML structure.
 
