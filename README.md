@@ -17,18 +17,15 @@ docker tags.
 
 To configure Jinya Backup you need to set several environment variables. Please make sure, that you have set all of
 them.
+CONNECTION_STRING=host=localhost port=5432 user=jinya password=jinya dbname=jinya
+sslmode=disable;PORT=3050;DB_SECRET_KEY=EGTyihxEzdCxLIkcM6OCeZkJ/AVu3aPp6U3RASGWPI8=
 
-| Variable                 | Description                                        |
-|--------------------------|----------------------------------------------------|
-| `DB_HOST`                | The host of the database                           |
-| `DB_PORT`                | The port of the database                           |
-| `DB_USER`                | The username for the database                      |
-| `DB_PASSWORD`            | The password for the database                      |
-| `DB_DATABASE`            | The database to use                                |
-| `DB_SECRET_KEY`          | The secret key used for encrypting FTP passwords   |
-| `DB_SECRET_NONCE`        | The secret nonce used for encrypting FTP passwords |
-| `DB_FIRST_USER_NAME`     | The first user created will get this username      |
-| `DB_FIRST_USER_PASSWORD` | The first user created will get this password      |
+| Variable                 | Description                                   | Sample                                                                          |
+|--------------------------|-----------------------------------------------|---------------------------------------------------------------------------------|
+| `CONNECTION_STRING`      | The database connection string                | host=localhost port=5432 user=jinya password=jinya dbname=jinya sslmode=disable |
+| `PORT`                   | The port to serve on, defaults to 8080        |                                                                                 |
+| `DB_FIRST_USER_NAME`     | The first user created will get this username |                                                                                 |
+| `DB_FIRST_USER_PASSWORD` | The first user created will get this password |                                                                                 |
 
 ## Jinya Backup Worker
 
