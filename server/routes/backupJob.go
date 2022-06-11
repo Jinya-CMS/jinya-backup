@@ -8,6 +8,7 @@ import (
 	"jinya-backup/server/download"
 	"log"
 	"net/http"
+	"time"
 )
 
 type backupJobPostData struct {
@@ -158,4 +159,33 @@ func TriggerDownload(w http.ResponseWriter, _ *http.Request, params httprouter.P
 	download.QueueJob(*backupJob)
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func ExportDatabase(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
+	backupJobs, err := database.FindAllBackupJobs()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	storedBackups, err := database.FindAllStoredBackups()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	jsonData := map[string]any{
+		"backups":       backupJobs,
+		"storedBackups": storedBackups,
+	}
+
+	data, err := json.Marshal(jsonData)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Disposition", "attachment; filename=\"export"+time.Now().Format("2006-01-02T15:04:05")+".json\"")
+	w.Header().Set("Content-Type", "application/json")
+	_, _ = w.Write(data)
 }

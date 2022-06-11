@@ -2,6 +2,7 @@ import {initMenuNavigation, pageBody, request} from "./utils.js";
 import {displayJobs} from "./jobs.js";
 import {displayLogin} from "./login.js";
 import {displayUsers} from "./users.js";
+import {displayImportExport} from "./importExport.js";
 
 function initGlobalActions() {
     document.querySelector('[data-action=logout]').addEventListener('click', async () => {
@@ -20,6 +21,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             pageBody.classList.remove('jinya-page-content--login');
             if (window.location.hash === '#users') {
                 await displayUsers();
+            } else if (window.location.hash === '#import-export') {
+                await displayImportExport();
             } else {
                 await displayJobs();
             }

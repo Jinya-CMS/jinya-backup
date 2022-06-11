@@ -22,7 +22,7 @@ func FindAllStoredBackups() ([]StoredBackup, error) {
 
 	storedBackups := make([]StoredBackup, 0)
 
-	err = db.Get(storedBackups, "SELECT id, full_path, name, backup_date, backup_job_id FROM stored_backup")
+	err = db.Select(&storedBackups, "SELECT id, full_path, name, backup_date, backup_job_id FROM stored_backup")
 
 	return storedBackups, err
 }

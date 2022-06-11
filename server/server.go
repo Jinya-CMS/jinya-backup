@@ -46,6 +46,9 @@ func RunServer() {
 	router.GET("/api/backup-job/:id/backup/:backupId", routes.AuthenticatedMiddleware(routes.DownloadStoredBackup))
 	router.DELETE("/api/backup-job/:id/backup/:backupId", routes.AuthenticatedMiddleware(routes.DeleteStoredBackup))
 
+	router.GET("/api/export", routes.AuthenticatedMiddleware(routes.ExportDatabase))
+	router.POST("/api/import", routes.AuthenticatedMiddleware(routes.ImportDatabase))
+
 	router.NotFound = http.FileServer(http.Dir("./web"))
 
 	for i := 0; i < helper.CpuCount; i++ {

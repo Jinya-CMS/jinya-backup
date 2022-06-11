@@ -1,5 +1,6 @@
 import {displayJobs} from "./jobs.js";
 import {displayUsers} from "./users.js";
+import {displayImportExport} from "./importExport.js";
 
 export const pageBody = document.querySelector('[data-role=page-body]');
 
@@ -96,8 +97,18 @@ export function initMenuNavigation() {
         await displayUsers();
         location.hash = '#users';
     });
+    document.querySelector('[data-menu-item=import-export]').addEventListener('click', async (e) => {
+        e.preventDefault();
+        resetMenuClass();
+        e.target.classList.add('cosmo-menu-bar__main-item--active');
+        await displayImportExport();
+        location.hash = '#import-export';
+    });
     if (window.location.hash === '#users') {
         resetMenuClass();
         document.querySelector('[data-menu-item=users]').classList.add('cosmo-menu-bar__main-item--active');
+    } else if (window.location.hash === '#import-export') {
+        resetMenuClass();
+        document.querySelector('[data-menu-item=import-export]').classList.add('cosmo-menu-bar__main-item--active');
     }
 }
