@@ -34,7 +34,10 @@ spec:
     stages {
         stage('Build production') {
             when {
-                branch 'v2'
+                anyOf {
+                    branch 'v2'
+                    buildingTag()
+                }
             }
             parallel {
                 stage('Build CGO worker') {
