@@ -19,6 +19,7 @@ type backupJobPostData struct {
 	Password   string `json:"password"`
 	Name       string `json:"name"`
 	Port       int    `json:"port"`
+	Type       string `json:"type"`
 }
 
 func ListBackupJobs(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
@@ -56,7 +57,7 @@ func CreateBackupJob(w http.ResponseWriter, r *http.Request, _ httprouter.Params
 		Name:       postData.Name,
 		Host:       postData.Host,
 		Port:       postData.Port,
-		Type:       "ftp",
+		Type:       postData.Type,
 		Username:   postData.Username,
 		RemotePath: postData.RemotePath,
 		LocalPath:  postData.LocalPath,
@@ -113,6 +114,9 @@ func UpdateBackupJob(w http.ResponseWriter, r *http.Request, params httprouter.P
 	}
 	if postData.LocalPath != "" {
 		backupJob.LocalPath = postData.LocalPath
+	}
+	if postData.Type != "" {
+		backupJob.Type = postData.Type
 	}
 	if postData.Password != "" {
 		err = backupJob.SetPassword(postData.Password)

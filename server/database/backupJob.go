@@ -86,7 +86,7 @@ func (backupJob *BackupJob) Update() error {
 
 	defer db.Close()
 
-	_, err = db.Exec("UPDATE backup_job SET name = $1, host = $2, port = $3, type = $4, username = $5, password = $6, remote_path = $6, local_path = $7 WHERE id = $8", backupJob.Id, backupJob.Name, backupJob.Host, backupJob.Port, backupJob.Type, backupJob.Username, backupJob.Password, backupJob.RemotePath, backupJob.LocalPath)
+	_, err = db.Exec("UPDATE backup_job SET name = $1, host = $2, port = $3, type = $4, username = $5, password = $6, remote_path = $7, local_path = $8 WHERE id = $9", backupJob.Name, backupJob.Host, backupJob.Port, backupJob.Type, backupJob.Username, backupJob.Password, backupJob.RemotePath, backupJob.LocalPath, backupJob.Id)
 
 	if _, err := os.Stat(backupJob.LocalPath); errors.Is(err, fs.ErrNotExist) {
 		err = os.MkdirAll(backupJob.LocalPath, 0775)

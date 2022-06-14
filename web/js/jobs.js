@@ -56,6 +56,7 @@ async function displaySpecificJob(id) {
                     const data = {
                         name: document.getElementById('name').value,
                         host: document.getElementById('host').value,
+                        type: document.getElementById('type').value,
                         port: parseInt(document.getElementById('port').value),
                         localPath: document.getElementById('localPath').value,
                         remotePath: document.getElementById('remotePath').value,
@@ -70,7 +71,7 @@ async function displaySpecificJob(id) {
                         await displayJobs();
                         await displaySpecificJob(job.id);
                     } else {
-                        alert('Error creating job');
+                        alert('Error updating job');
                     }
                 });
                 document.querySelector('[data-role=cancel-job-modal]').addEventListener('click', closeModal);
@@ -119,6 +120,7 @@ export async function displayJobs() {
                 const data = {
                     name: document.getElementById('name').value,
                     host: document.getElementById('host').value,
+                    type: document.getElementById('type').value,
                     port: parseInt(document.getElementById('port').value),
                     localPath: document.getElementById('localPath').value,
                     remotePath: document.getElementById('remotePath').value,

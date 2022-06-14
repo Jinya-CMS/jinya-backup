@@ -91,6 +91,8 @@
             <dl class="cosmo-key-value-list">
                 <dt class="cosmo-key-value-list__key">ID</dt>
                 <dd class="cosmo-key-value-list__value">{{job.id}}</dd>
+                <dt class="cosmo-key-value-list__key">Type</dt>
+                <dd class="cosmo-key-value-list__value">{{job.type}}</dd>
                 <dt class="cosmo-key-value-list__key">Host</dt>
                 <dd class="cosmo-key-value-list__value">{{job.host}}</dd>
                 <dt class="cosmo-key-value-list__key">Port</dt>
@@ -138,23 +140,28 @@
         <h1 class="cosmo-modal__title">Add FTP job</h1>
         <div class="cosmo-modal__content">
             <div class="cosmo-input__group">
-                <label class="cosmo-label" class="cosmo-label" for="name">Name</label>
-                <input class="cosmo-input" class="cosmo-input" id="name" placeholder="Name" required type="text">
-                <label class="cosmo-label" class="cosmo-label" for="host">Host</label>
-                <input class="cosmo-input" class="cosmo-input" id="host" placeholder="Host" required type="text">
-                <label class="cosmo-label" class="cosmo-label" for="port">Port</label>
-                <input class="cosmo-input" class="cosmo-input" id="port" placeholder="Port" required type="number">
-                <label class="cosmo-label" class="cosmo-label" for="username">Username</label>
-                <input class="cosmo-input" class="cosmo-input" id="username" placeholder="Username" required
+                <label class="cosmo-label" for="name">Name</label>
+                <input class="cosmo-input" id="name" placeholder="Name" required type="text">
+                <label class="cosmo-label" for="type">Server type</label>
+                <select class="cosmo-select" id="type" required>
+                    <option value="ftp" selected>FTP</option>
+                    <option value="sftp">SFTP</option>
+                </select>
+                <label class="cosmo-label" for="host">Host</label>
+                <input class="cosmo-input" id="host" placeholder="Host" required type="text">
+                <label class="cosmo-label" for="port">Port</label>
+                <input class="cosmo-input" id="port" placeholder="Port" required type="number">
+                <label class="cosmo-label" for="username">Username</label>
+                <input class="cosmo-input" id="username" placeholder="Username" required
                        type="text">
-                <label class="cosmo-label" class="cosmo-label" for="password">Password</label>
-                <input class="cosmo-input" class="cosmo-input" id="password" placeholder="Password" required
+                <label class="cosmo-label" for="password">Password</label>
+                <input class="cosmo-input" id="password" placeholder="Password" required
                        type="password">
-                <label class="cosmo-label" class="cosmo-label" for="remotePath">Remote path</label>
-                <input class="cosmo-input" class="cosmo-input" id="remotePath" placeholder="Remote path" required
+                <label class="cosmo-label" for="remotePath">Remote path</label>
+                <input class="cosmo-input" id="remotePath" placeholder="Remote path" required
                        type="text">
-                <label class="cosmo-label" class="cosmo-label" for="localPath">Local path</label>
-                <input class="cosmo-input" class="cosmo-input" id="localPath" placeholder="Local path" required
+                <label class="cosmo-label" for="localPath">Local path</label>
+                <input class="cosmo-input" id="localPath" placeholder="Local path" required
                        type="text">
             </div>
         </div>
@@ -169,28 +176,27 @@
         <h1 class="cosmo-modal__title">Edit FTP job</h1>
         <div class="cosmo-modal__content">
             <div class="cosmo-input__group">
-                <label class="cosmo-label" class="cosmo-label" for="name">Name</label>
-                <input class="cosmo-input" class="cosmo-input" id="name" placeholder="Name" required type="text"
-                       value="{{name}}">
-                <label class="cosmo-label" class="cosmo-label" for="host">Host</label>
-                <input class="cosmo-input" class="cosmo-input" id="host" placeholder="Host" required type="text"
-                       value="{{host}}">
-                <label class="cosmo-label" class="cosmo-label" for="port">Port</label>
-                <input class="cosmo-input" class="cosmo-input" id="port" placeholder="Port" required type="number"
-                       value="{{port}}">
-                <label class="cosmo-label" class="cosmo-label" for="username">Username</label>
-                <input class="cosmo-input" class="cosmo-input" id="username" placeholder="Username" required type="text"
+                <label class="cosmo-label" for="name">Name</label>
+                <input class="cosmo-input" id="name" placeholder="Name" required type="text" value="{{name}}">
+                <label class="cosmo-label" for="type">Server type</label>
+                <select class="cosmo-select" id="type" required>
+                    <option {{#eq host.type 'ftp'}}selected{{/eq}} value="ftp">FTP</option>
+                    <option {{#eq host.type 'sftp'}}selected{{/eq}} value="sftp">SFTP</option>
+                </select>
+                <label class="cosmo-label" for="host">Host</label>
+                <input class="cosmo-input" id="host" placeholder="Host" required type="text" value="{{host}}">
+                <label class="cosmo-label" for="port">Port</label>
+                <input class="cosmo-input" id="port" placeholder="Port" required type="number" value="{{port}}">
+                <label class="cosmo-label" for="username">Username</label>
+                <input class="cosmo-input" id="username" placeholder="Username" required type="text"
                        value="{{username}}">
-                <label class="cosmo-label" class="cosmo-label" for="password">Password</label>
-                <input class="cosmo-input" class="cosmo-input" id="password" placeholder="Password" type="password"
-                       value="{{password}}">
-                <label class="cosmo-label" class="cosmo-label" for="remotePath">Remote path</label>
-                <input class="cosmo-input" class="cosmo-input" id="remotePath" placeholder="Remote path" required
-                       type="text"
+                <label class="cosmo-label" for="password">Password</label>
+                <input class="cosmo-input" id="password" placeholder="Password" type="password" value="{{password}}">
+                <label class="cosmo-label" for="remotePath">Remote path</label>
+                <input class="cosmo-input" id="remotePath" placeholder="Remote path" required type="text"
                        value="{{remotePath}}">
-                <label class="cosmo-label" class="cosmo-label" for="localPath">Local path</label>
-                <input class="cosmo-input" class="cosmo-input" id="localPath" placeholder="Local path" required
-                       type="text"
+                <label class="cosmo-label" for="localPath">Local path</label>
+                <input class="cosmo-input" id="localPath" placeholder="Local path" required type="text"
                        value="{{localPath}}">
             </div>
         </div>

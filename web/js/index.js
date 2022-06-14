@@ -4,6 +4,12 @@ import {displayLogin} from "./login.js";
 import {displayUsers} from "./users.js";
 import {displayImportExport} from "./importExport.js";
 
+Handlebars.registerHelper('eq', function (a, b, options) {
+    if (a === b) {
+        return options.fn(this);
+    }
+});
+
 function initGlobalActions() {
     document.querySelector('[data-action=logout]').addEventListener('click', async () => {
         await request('/api/login/', 'DELETE');
