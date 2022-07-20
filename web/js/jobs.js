@@ -58,16 +58,16 @@ async function displaySpecificJob(id) {
                             </tr>
                             </thead>
                             <tbody>
-                            ${backups.map(({id, backupDate, name}) => html`
+                            ${backups.map(item => html`
                                 <tr>
-                                    <td>${id}</td>
-                                    <td>${name}</td>
-                                    <td>${backupDate.toLocaleString}</td>
+                                    <td>${item.id}</td>
+                                    <td>${item.name}</td>
+                                    <td>${new Date(Date.parse(item.backupDate)).toLocaleString()}</td>
                                     <td>
                                         <div class="cosmo-toolbar__group">
-                                            <a target="_blank" href="/api/backup-job/${job.id}/backup/${id}"
+                                            <a target="_blank" href="/api/backup-job/${job.id}/backup/${item.id}"
                                                class="cosmo-button">Download</a>
-                                            <button type="button" data-job-id="${job.id}" data-id="${id}"
+                                            <button type="button" data-job-id="${job.id}" data-id="${item.id}"
                                                     class="cosmo-button" data-action="delete-backup">Delete
                                             </button>
                                         </div>
