@@ -1,10 +1,40 @@
 import {confirm, displayModal, pageBody, request, resetContent} from "./utils.js";
+import {html} from "../lib/js/jinya-html.js";
 
 export async function displayUsers() {
     resetContent();
     const users = await (await request('/api/user', 'GET')).json()
-    const template = Handlebars.compile(document.getElementById('userListTemplate').innerHTML);
-    pageBody.innerHTML = template({users});
+    pageBody.innerHTML = html`
+        <div class="cosmo-page-body__content">
+            <div class="cosmo-toolbar">
+                <div class="cosmo-toolbar__group">
+                    <button data-action="create-user" class="cosmo-button" type="button">Create user</button>
+                </div>
+            </div>
+            <table class="cosmo-table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                ${users.map(item => `<tr>
+                    <td>${item.id}</td>
+                    <td>${item.name}</td>
+                    <td>
+                        <div class="cosmo-toolbar__group">
+                            <button type="button" data-id="${item.id}" data-action="edit-user" class="cosmo-button">Edit
+                            </button>
+                            <button type="button" data-id="${item.id}" class="cosmo-button" data-action="delete-user">Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>`)}
+                </tbody>
+            </table>
+        </div>`;
     document.querySelectorAll('[data-action=delete-user]').forEach((item) => {
         item.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -23,8 +53,28 @@ export async function displayUsers() {
     document.querySelectorAll('[data-action=edit-user]').forEach((item) => {
         item.addEventListener('click', async (e) => {
             const user = users.filter(f => f.id === item.getAttribute('data-id'))[0];
-            const template = Handlebars.compile(document.getElementById('editUserTemplate').innerHTML);
-            const closeModal = await displayModal(template(user));
+            const closeModal = await displayModal(html`
+                <form class="cosmo-modal" data-role="edit-user-modal">
+                    <div class="cosmo-modal__title">Edit user</div>
+                    <div class="cosmo-modal__content">
+                        <div class="cosmo-input__group">
+                            <label class="cosmo-label" for="username">Username</label>
+                            <input class="cosmo-input" autocomplete="false" id="username" name="username"
+                                   placeholder="Username"
+                                   required type="text"
+                                   value="${user.name}">
+                            <label class="cosmo-label" for="password">Password</label>
+                            <input class="cosmo-input" autocomplete="false" id="password" name="password"
+                                   placeholder="Password"
+                                   required
+                                   type="password">
+                        </div>
+                    </div>
+                    <div class="cosmo-modal__button-bar">
+                        <button class="cosmo-button" type="submit">Save user</button>
+                        <button class="cosmo-button" data-action="cancel-modal" type="button">Cancel</button>
+                    </div>
+                </form>`);
             document.querySelector('[data-role=edit-user-modal]').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const data = {
@@ -46,8 +96,24 @@ export async function displayUsers() {
     document.querySelectorAll('[data-action=create-user]').forEach((item) => {
         item.addEventListener('click', async (e) => {
             const user = users.filter(f => f.id === item.getAttribute('data-id'));
-            const template = Handlebars.compile(document.getElementById('addUserTemplate').innerHTML);
-            const closeModal = await displayModal(template());
+            const closeModal = await displayModal(html`
+                <form class="cosmo-modal" data-role="add-user-modal">
+                    <div class="cosmo-modal__title">Add user</div>
+                    <div class="cosmo-modal__content">
+                        <div class="cosmo-input__group" data-role="login-form">
+                            <label class="cosmo-label" for="username">Username</label>
+                            <input class="cosmo-input" id="username" name="username" placeholder="Username" required
+                                   type="text">
+                            <label class="cosmo-label" for="password">Password</label>
+                            <input class="cosmo-input" id="password" name="password" placeholder="Password" required
+                                   type="password">
+                        </div>
+                    </div>
+                    <div class="cosmo-modal__button-bar">
+                        <button class="cosmo-button" type="submit">Save user</button>
+                        <button class="cosmo-button" data-action="cancel-modal" type="button">Cancel</button>
+                    </div>
+                </form>`);
             document.querySelector('[data-role=add-user-modal]').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const data = {
