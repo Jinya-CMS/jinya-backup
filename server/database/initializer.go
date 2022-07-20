@@ -7,7 +7,10 @@ import (
 
 func createInitialUser() error {
 	firstUserName := os.Getenv("DB_FIRST_USER_NAME")
-	firstPassword := os.Getenv("DB_FIRST_USER_PASSWORD")
+	firstPassword, err := hashPassword(os.Getenv("DB_FIRST_USER_PASSWORD"))
+	if err != nil {
+		return err
+	}
 
 	db, err := ConnectToDb()
 	if err != nil {
