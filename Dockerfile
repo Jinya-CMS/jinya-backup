@@ -1,4 +1,4 @@
-FROM quay.imanuel.dev/dockerhub/library---golang:1.18-alpine AS build
+FROM quay.imanuel.dev/dockerhub/library---golang:1.19-alpine AS build
 
 # Resolve app dependencies.
 WORKDIR /app

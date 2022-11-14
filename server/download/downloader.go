@@ -7,7 +7,6 @@ import (
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 	"io"
-	"io/ioutil"
 	"jinya-backup/server/database"
 	"log"
 	"os"
@@ -108,7 +107,7 @@ func downloadFromSftpServer(job database.BackupJob) {
 
 func saveRemoteFileToLocalFile(job database.BackupJob, err error, response io.Reader) {
 	log.Printf("Job %s: Read all content from response", job.Id)
-	content, err := ioutil.ReadAll(response)
+	content, err := io.ReadAll(response)
 	if err != nil {
 		log.Printf("Job %s: Failed read downloaded file %s", job.Id, err.Error())
 		return
@@ -122,7 +121,7 @@ func saveRemoteFileToLocalFile(job database.BackupJob, err error, response io.Re
 	path := filepath.Join(job.LocalPath, hex.EncodeToString(sum))
 
 	log.Printf("Job %s: Write content to file %s", job.Id, path)
-	err = ioutil.WriteFile(path, content, 0777)
+	err = os.WriteFile(path, content, 0777)
 	if err != nil {
 		log.Printf("Job %s: Failed write downloaded file %s", job.Id, err.Error())
 		return
