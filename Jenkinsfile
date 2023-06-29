@@ -50,7 +50,7 @@ spec:
                                 sh "make"
                                 sh "make install"
                             }
-                            sh "CC=/usr/local/musl/bin/musl-gcc go build --ldflags '-linkmode external -extldflags \"-static\"' -o jinya-backup-worker ."
+                            sh "CC=/usr/local/musl/bin/musl-gcc go build --ldflags '-linkmode external -extldflags \"-static\"' -o jinya-backup-worker -buildvcs=false ."
                             archiveArtifacts artifacts: 'jinya-backup-worker', followSymlinks: false
                         }
                     }
