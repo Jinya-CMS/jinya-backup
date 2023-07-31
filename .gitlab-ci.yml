@@ -47,7 +47,6 @@ lint and format:
     - go vet
 
 build always:
-  extends: .build-worker
   image: quay.imanuel.dev/dockerhub/library---golang:1.20-alpine
   stage: test
   script:
