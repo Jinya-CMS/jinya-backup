@@ -3,9 +3,8 @@ stages:
   - test
   - build
 
-worker-build:
+.build-worker:
   image: quay.imanuel.dev/dockerhub/library---golang:1.20-alpine
-  stage: build
   before_script:
     - wget https://www.musl-libc.org/releases/musl-1.2.4.tar.gz
     - tar -xvf musl-1.2.4.tar.gz
@@ -15,6 +14,10 @@ worker-build:
     - make install
   script:
     - CC=/usr/local/musl/bin/musl-gcc go build --ldflags '-linkmode external -extldflags \"-static\"' -o jinya-backup-worker -buildvcs=false .
+
+worker-build:
+  extends: .build-worker
+  stage: build
   artifacts:
     name: jinya-backup-worker
     paths:
@@ -52,6 +55,7 @@ lint and format:
     - go vet
 
 merge-request-build:
+  extends: .build-worker
   image: quay.imanuel.dev/dockerhub/library---golang:1.20-alpine
   stage: test
   script:
