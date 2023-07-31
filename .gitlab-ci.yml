@@ -3,15 +3,12 @@ stages:
   - test
   - build
 
-.build-worker:
+build worker:
   image: quay.imanuel.dev/dockerhub/library---golang:1.20-alpine
   script:
     - apk update
     - apk add make go git gcc libc-dev
     - go build --ldflags '-linkmode external -extldflags "-static"' -o jinya-backup-worker -buildvcs=false .
-
-build worker:
-  extends: .build-worker
   stage: build
   artifacts:
     name: jinya-backup-worker
@@ -54,4 +51,7 @@ build always:
   image: quay.imanuel.dev/dockerhub/library---golang:1.20-alpine
   stage: test
   script:
+    - apk update
+    - apk add make go git gcc libc-dev
     - go build -o jinya-backup
+    - go build --ldflags '-linkmode external -extldflags "-static"' -o jinya-backup-worker -buildvcs=false .
