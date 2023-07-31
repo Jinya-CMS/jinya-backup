@@ -30,8 +30,8 @@ build container:
     - docker tag "quay.imanuel.dev/jinya/jinya-backup:${CI_COMMIT_TAG}" "quay.imanuel.dev/jinya/jinya-backup:latest"
     - docker tag "quay.imanuel.dev/jinya/jinya-backup:${CI_COMMIT_TAG}" "jinyacms/jinya-backup:${CI_COMMIT_TAG}"
     - docker tag "quay.imanuel.dev/jinya/jinya-backup:${CI_COMMIT_TAG}" jinyacms/jinya-backup:latest
-    - docker push "jinya/jinya-backup:${CI_COMMIT_TAG}"
-    - docker push "jinya/jinya-backup:latest"
+    - docker push "quay.imanuel.dev/jinya/jinya-backup:${CI_COMMIT_TAG}"
+    - docker push "quay.imanuel.dev/jinya/jinya-backup:latest"
     - docker push "jinyacms/jinya-backup:${CI_COMMIT_TAG}"
     - docker push "jinyacms/jinya-backup:latest"
   rules:
