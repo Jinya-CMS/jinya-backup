@@ -10,7 +10,7 @@ stages:
     - apk add make go git gcc libc-dev
     - go build --ldflags '-linkmode external -extldflags "-static"' -o jinya-backup-worker -buildvcs=false .
 
-worker-build:
+build worker:
   extends: .build-worker
   stage: build
   artifacts:
@@ -20,7 +20,7 @@ worker-build:
   rules:
     - if: $CI_COMMIT_TAG
 
-docker-build:
+build container:
   image: quay.imanuel.dev/dockerhub/library---docker:stable
   stage: build
   services:
@@ -49,7 +49,7 @@ lint and format:
     - go fmt
     - go vet
 
-merge-request-build:
+build always:
   extends: .build-worker
   image: quay.imanuel.dev/dockerhub/library---golang:1.20-alpine
   stage: test
