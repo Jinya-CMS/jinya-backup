@@ -5,15 +5,10 @@ stages:
 
 .build-worker:
   image: quay.imanuel.dev/dockerhub/library---golang:1.20-alpine
-  before_script:
-    - wget https://www.musl-libc.org/releases/musl-1.2.4.tar.gz
-    - tar -xvf musl-1.2.4.tar.gz
-    - cd musl-1.2.4
-    - ./configure
-    - make
-    - make install
   script:
-    - CC=/usr/local/musl/bin/musl-gcc go build --ldflags '-linkmode external -extldflags \"-static\"' -o jinya-backup-worker -buildvcs=false .
+    - apk update
+    - apk add make go git gcc libc-dev
+    - go build --ldflags '-linkmode external -extldflags "-static"' -o jinya-backup-worker -buildvcs=false .
 
 worker-build:
   extends: .build-worker
