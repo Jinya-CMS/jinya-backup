@@ -1,4 +1,4 @@
-FROM quay.imanuel.dev/dockerhub/library---golang:1.20-alpine AS build
+FROM harbor.ulbricht.casa/library/golang:1.21-alpine AS build
 
 WORKDIR /app
 
@@ -8,13 +8,13 @@ RUN apk add git
 
 RUN go build -o /app/jinya-backup jinya-backup
 
-FROM quay.imanuel.dev/dockerhub/library---node:latest AS build-frontend
+FROM harbor.ulbricht.casa/library/node:latest AS build-frontend
 
 COPY web/ /app/web
 
 RUN cd /app/web && npm install
 
-FROM quay.imanuel.dev/dockerhub/library---alpine:latest
+FROM harbor.ulbricht.casa/library/alpine:latest
 
 WORKDIR /app
 
