@@ -8,7 +8,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/lib/pq v1.10.9
-	github.com/pkg/sftp v1.13.5
+	github.com/pkg/sftp v1.13.6
 	golang.org/x/crypto v0.11.0
 	gopkg.in/yaml.v3 v3.0.1
 )
