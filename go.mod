@@ -9,7 +9,7 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/lib/pq v1.10.9
 	github.com/pkg/sftp v1.13.6
-	golang.org/x/crypto v0.12.0
+	golang.org/x/crypto v0.16.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -17,5 +17,5 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/kr/fs v0.1.0 // indirect
-	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/sys v0.15.0 // indirect
 )
